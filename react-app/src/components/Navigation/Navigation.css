@@ -1,7 +1,11 @@
 .profile-dropdown {
   position: absolute;
+  right: 30px;
+  z-index: 10;
 }
 
-.hidden {
-  display: none;
+.navbar{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

@@ -1,5 +1,9 @@
 
 from .db import db, environment, SCHEMA, add_prefix_for_prod
+from .portfolios import Portfolio
+from .companies import Company
+
+
 
 class Transaction(db.Model):
     __tablename__ = 'transactions'

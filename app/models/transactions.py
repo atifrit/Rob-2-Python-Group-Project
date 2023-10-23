@@ -1,9 +1,6 @@
-
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from .portfolios import Portfolio
 from .companies import Company
-
-
 
 class Transaction(db.Model):
     __tablename__ = 'transactions'
@@ -15,3 +12,6 @@ class Transaction(db.Model):
     company_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('companies.id')), primary_key=True, nullable=False)
     shares = db.Column(db.Integer, nullable=False)
     sold = db.Column(db.Boolean, nullable=False)
+
+    company = db.relationship('Company', back_populates='transactions')
+    portfolio = db.relationship('Portfolio', back_populates='transactions')

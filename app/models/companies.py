@@ -1,4 +1,6 @@
 from .db import db, environment, SCHEMA
+from .watchlists_stocks import WatchlistStock
+from .transactions import Transaction
 
 class Company(db.Model):
     __tablename__ = 'companies'
@@ -24,3 +26,6 @@ class Company(db.Model):
     volume = db.Column(db.Float)
     week_high = db.Column(db.Float)
     week_low = db.Column(db.Float)
+
+    watchlist_stocks = db.relationship('WatchlistStock', back_populates='company')
+    transactions = db.relationship('Transaction', back_populates='company')

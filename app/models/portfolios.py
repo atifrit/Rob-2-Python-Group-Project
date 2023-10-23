@@ -1,6 +1,6 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
-from .user import User
-from .transactions import Transaction
+# from .user import User
+# from .transactions import Transaction
 
 class Portfolio(db.Model):
     __tablename__ = 'portfolios'

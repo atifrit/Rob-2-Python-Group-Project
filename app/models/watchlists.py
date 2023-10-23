@@ -1,6 +1,6 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
-from .user import User
-from .watchlists_stocks import WatchlistStock
+# from .user import User
+# from .watchlists_stocks import WatchlistStock
 
 class Watchlist(db.Model):
     __tablename__ = 'watchlists'

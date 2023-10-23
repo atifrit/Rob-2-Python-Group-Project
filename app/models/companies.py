@@ -1,6 +1,6 @@
 from .db import db, environment, SCHEMA
-from .watchlists_stocks import WatchlistStock
-from .transactions import Transaction
+# from .watchlists_stocks import WatchlistStock
+# from .transactions import Transaction
 
 class Company(db.Model):
     __tablename__ = 'companies'

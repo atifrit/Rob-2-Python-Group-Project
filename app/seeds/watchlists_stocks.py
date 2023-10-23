@@ -1,4 +1,4 @@
-from app.models import db, WatchlistStock, Watchlist, Company, environment, SCHEMA
+from app.models import db, User, WatchlistStock, Watchlist, Company, environment, SCHEMA
 from sqlalchemy.sql import text
 
 def seed_watchlist_stocks():

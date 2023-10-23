@@ -67,14 +67,21 @@ def seed_companies():
 
     company32 = Company(name='Capcom Co., Ltd.', ticker='CCOEY', price=60.7, ceo='Kenzo Tsujimoto', employees=2705, headquarters='Osaka, Japan', founded=1979, marketcap=8000000000.0, pe_ratio=15.9, div_yield=1.5, avg_volume=900000, high=63.0, low=60.0, open_price=61.5, volume=920000, week_high=65.0, week_low=58.5)
 
+    company33 = Company(name='Sony Corporation', ticker='SNE', price=120.5, ceo='Kenichiro Yoshida', employees=114400, headquarters='Tokyo, Japan', founded=1946, marketcap=150000000000.0, pe_ratio=20.5, div_yield=0.8, avg_volume=1500000, high=125.0, low=115.0, open_price=118.0, volume=1550000, week_high=130.0, week_low=110.0)
+
     company34 = Company(name='Bandai Namco Holdings Inc.', ticker='BNHDF', price=74.3, ceo='Mitsuaki Taguchi', employees=8581, headquarters='Tokyo, Japan', founded=1950, marketcap=8500000000.0, pe_ratio=19.8, div_yield=1.7, avg_volume=980000, high=76.5, low=73.5, open_price=74.7, volume=965000, week_high=78.0, week_low=71.5)
 
     company35 = Company(name='The Pokémon Company', ticker='POKE', price=180.5, ceo='Tsunekazu Ishihara', employees=500, headquarters='Tokyo, Japan', founded=1998, marketcap=15000000000.0, pe_ratio=26.8, div_yield=1.5, avg_volume=750000, high=185.0, low=175.0, open_price=180.2, volume=740000, week_high=190.0, week_low=170.0)
 
+    company36 = Company(name='Paramount Pictures Corporation', ticker='PARMT', price=85.4, ceo='Brian Robbins', employees=4500, headquarters='Los Angeles, California, USA', founded=1912, marketcap=13000000000.0, pe_ratio=18.2, div_yield=1.2, avg_volume=750000, high=88.0, low=82.5, open_price=84.0, volume=780000, week_high=90.0, week_low=80.0)
+
+    company37 = Company(name='SNK Corporation', ticker='SNKCP', price=45.3, ceo='Ge Zhihui', employees=250, headquarters='Osaka, Japan', founded=1978, marketcap=500000000.0, pe_ratio=12.7, div_yield=0.8, avg_volume=300000, high=48.0, low=43.0, open_price=44.5, volume=310000, week_high=49.5, week_low=42.0)
 
     company38 = Company(name='HBO', ticker='HBO', price=35.5, ceo='Casey Bloys', employees=6000, headquarters='New York City, New York', founded=1972, marketcap=9000000000.0, pe_ratio=15.8, div_yield=2.1, avg_volume=1100000, high=37.0, low=34.0, open_price=35.2, volume=1120000, week_high=38.0, week_low=33.0)
 
     company39 = Company(name='GameStop', ticker='GME', price=150.2, ceo='Matt Furlong', employees=14000, headquarters='Grapevine, Texas', founded=1984, marketcap=7000000000.0, pe_ratio=10.5, div_yield=1.2, avg_volume=2100000, high=155.0, low=145.0, open_price=150.5, volume=2150000, week_high=160.0, week_low=140.0)
+
+    company40 = Company(name='Subaru Corporation', ticker='FUJHY', price=78.4, ceo='Tomomi Nakamura', employees=15000, headquarters='Tokyo, Japan', founded=1953, marketcap=20000000000.0, pe_ratio=14.5, div_yield=1.8, avg_volume=750000, high=80.5, low=76.0, open_price=77.5, volume=780000, week_high=82.0, week_low=74.5)
 
     company41 = Company(name='Honda Motor Co., Ltd.', ticker='HMC', price=32.5, ceo='Toshihiro Mibe', employees=220000, headquarters='Tokyo, Japan', founded=1948, marketcap=55000000000.0, pe_ratio=9.8, div_yield=3.5, avg_volume=2800000, high=34.0, low=31.0, open_price=32.7, volume=2850000, week_high=36.0, week_low=30.0)
 
@@ -82,13 +89,17 @@ def seed_companies():
 
     company43 = Company(name='Ubisoft Entertainment', ticker='UBSFY', price=75.6, ceo='Yves Guillemot', employees=18500, headquarters='Montreuil, France', founded=1986, marketcap=10000000000.0, pe_ratio=18.3, div_yield=1.5, avg_volume=1200000, high=78.0, low=73.0, open_price=76.5, volume=1250000, week_high=82.0, week_low=70.0)
 
+    company44 = Company(name='Renault SA', ticker='RNLSY', price=32.3, ceo='Luca de Meo', employees=180000, headquarters='Boulogne-Billancourt, France', founded=1899, marketcap=25000000000.0, pe_ratio=11.6, div_yield=2.2, avg_volume=850000, high=33.5, low=31.0, open_price=32.0, volume=830000, week_high=34.0, week_low=30.5)
+
     company45 = Company(name='CD Projekt', ticker='CDP', price=92.4, ceo='Adam Kiciński', employees=4100, headquarters='Warsaw, Poland', founded=1994, marketcap=6000000000.0, pe_ratio=14.8, div_yield=1.2, avg_volume=750000, high=96.0, low=90.0, open_price=92.0, volume=780000, week_high=100.0, week_low=88.0)
+
+    company46 = Company(name='Mazda Motor Corporation', ticker='MZDAY', price=14.7, ceo='Akira Marumoto', employees=49000, headquarters='Hiroshima, Japan', founded=1920, marketcap=8000000000.0, pe_ratio=10.5, div_yield=2.0, avg_volume=650000, high=15.2, low=14.2, open_price=14.5, volume=620000, week_high=15.5, week_low=13.8)
 
     company47 = Company(name='Ferrari', ticker='RACE', price=225.7, ceo='Benedetto Vigna', employees=4500, headquarters='Maranello, Italy', founded=1947, marketcap=35000000000.0, pe_ratio=25.4, div_yield=0.6, avg_volume=800000, high=230.0, low=222.0, open_price=224.5, volume=810000, week_high=235.0, week_low=218.0)
 
     company48 = Company(name='Toyota', ticker='TM', price=155.2, ceo='Akio Toyoda', employees=370000, headquarters='Toyota City, Japan', founded=1937, marketcap=220000000000.0, pe_ratio=10.5, div_yield=2.7, avg_volume=2100000, high=158.0, low=153.0, open_price=154.5, volume=2150000, week_high=162.0, week_low=150.0)
 
-    company47 = Company(name='Porsche', ticker='POAHY', price=100.2, ceo='Oliver Blume', employees=35000, headquarters='Stuttgart, Germany', founded=1931, marketcap=50000000000.0, pe_ratio=8.5, div_yield=3.1, avg_volume=1200000, high=105.0, low=98.0, open_price=99.5, volume=1250000, week_high=110.0, week_low=96.0)
+    company49 = Company(name='Porsche', ticker='POAHY', price=100.2, ceo='Oliver Blume', employees=35000, headquarters='Stuttgart, Germany', founded=1931, marketcap=50000000000.0, pe_ratio=8.5, div_yield=3.1, avg_volume=1200000, high=105.0, low=98.0, open_price=99.5, volume=1250000, week_high=110.0, week_low=96.0)
 
     company50 = Company(name='Ford Motor Company', ticker='F', price=12.8, ceo='Jim Farley', employees=190000, headquarters='Dearborn, Michigan', founded=1903, marketcap=45000000000.0, pe_ratio=9.3, div_yield=3.9, avg_volume=4500000, high=13.0, low=12.0, open_price=12.7, volume=4550000, week_high=14.0, week_low=11.0)
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, session, request
-from app.models import Company, db
+from app.models import Company, User, db
 from flask_login import current_user, login_user, logout_user, login_required
 
 companies = Blueprint('companies', __name__)

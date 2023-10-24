@@ -1,0 +1,16 @@
+.landing-container{
+  border: 1px solid grey;
+  background: orange;
+  width: 100%;
+  min-height: 100%;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.landing-container > h1{
+  font-size: 80px;
+  color: white;
+}

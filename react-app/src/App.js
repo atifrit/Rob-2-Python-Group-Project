@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Switch, Redirect } from "react-router-dom";
 import SignupFormPage from "./components/SignupFormPage";
 import LoginFormPage from "./components/LoginFormPage";
 import { authenticate } from "./store/session";
 import Navigation from "./components/Navigation";
 import CompanyDetails from "./components/Companies/CompanyDetails";
+import PortfolioDetails from "./components/Portfolio";
 
 function App() {
   const dispatch = useDispatch();
@@ -13,6 +14,8 @@ function App() {
   useEffect(() => {
     dispatch(authenticate()).then(() => setIsLoaded(true));
   }, [dispatch]);
+
+  const user = useSelector((state) => state.session.user);
 
   return (
     <>
@@ -28,6 +31,10 @@ function App() {
           <Route path="/companies/:id(\d+)">
             <CompanyDetails />
           </Route>
+          <Route path="/portfolio">
+            {user ? <PortfolioDetails /> : <Redirect to="/login" />}
+          </Route>
+          <Redirect to="/login" />
         </Switch>
       )}
     </>

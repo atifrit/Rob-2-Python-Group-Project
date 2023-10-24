@@ -6,6 +6,7 @@ import LoginFormPage from "./components/LoginFormPage";
 import Landing from "./components/Landing";
 import { authenticate } from "./store/session";
 import Navigation from "./components/Navigation";
+import CompanyDetails from "./components/Companies/CompanyDetails";
 
 function App() {
   const dispatch = useDispatch();
@@ -19,11 +20,14 @@ function App() {
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
-          <Route path="/login" >
+          <Route path="/login">
             <LoginFormPage />
           </Route>
           <Route path="/signup">
             <SignupFormPage />
+          </Route>
+          <Route path="/companies/:id(\d+)">
+            <CompanyDetails />
           </Route>
           <Route exact path="/">
             <Landing />

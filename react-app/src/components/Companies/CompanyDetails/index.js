@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getCompanyById } from "../../../store/companies";
@@ -7,13 +7,14 @@ const CompanyDetails = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   console.log("Company ID:", id);
-  const company = useSelector((state) => state.companies);
+  const company = useSelector((state) => state.companies.currentCompany);
 
   useEffect(() => {
     dispatch(getCompanyById(Number(id)));
   }, [dispatch, id]);
 
   if (!company) return <div>Loading...</div>;
+  console.log(company);
 
   return (
     <div className="company-details">

@@ -7,6 +7,7 @@ import { authenticate } from "./store/session";
 import Navigation from "./components/Navigation";
 import CompanyDetails from "./components/Companies/CompanyDetails";
 import PortfolioDetails from "./components/Portfolio";
+import Landing from "./components/Landing";
 
 function App() {
   const dispatch = useDispatch();
@@ -19,7 +20,6 @@ function App() {
 
   return (
     <>
-      <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
           <Route path="/login">
@@ -27,6 +27,9 @@ function App() {
           </Route>
           <Route path="/signup">
             <SignupFormPage />
+          </Route>
+          <Route exact path="/">
+            <Landing />
           </Route>
           <Route path="/companies/:id(\d+)">
             <CompanyDetails />

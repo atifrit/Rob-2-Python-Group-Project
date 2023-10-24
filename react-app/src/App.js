@@ -8,8 +8,6 @@ import { authenticate } from "./store/session";
 import Navigation from "./components/Navigation";
 import CompanyDetails from "./components/Companies/CompanyDetails";
 import PortfolioDetails from "./components/Portfolio";
-import Landing from "./components/Landing";
-
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);

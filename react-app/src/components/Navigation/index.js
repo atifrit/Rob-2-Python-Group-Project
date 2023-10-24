@@ -68,7 +68,7 @@ function Navigation({ isLoaded }) {
             <NavLink className="login" to="/login">
               Log in
             </NavLink>
-            <NavLink className="signup" to="/sign-up">
+            <NavLink className="signup" to="/signup">
               Sign up
             </NavLink>
           </>

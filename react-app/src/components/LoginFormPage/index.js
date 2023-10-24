@@ -1,57 +1,28 @@
-import React, { useState } from "react";
-import { login } from "../../store/session";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
-import './LoginForm.css';
+import React from "react";
+import LoginForm from "./LoginForm";
+import "./LoginPage.css"
 
-function LoginFormPage() {
-  const dispatch = useDispatch();
-  const sessionUser = useSelector((state) => state.session.user);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState([]);
+const LoginPage = () => {
 
-  if (sessionUser) return <Redirect to="/" />;
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = await dispatch(login(email, password));
-    if (data) {
-      setErrors(data);
-    }
-  };
 
   return (
-    <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <ul>
-          {errors.map((error, idx) => (
-            <li key={idx}>{error}</li>
-          ))}
-        </ul>
-        <label>
-          Email
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit">Log In</button>
-      </form>
-    </>
-  );
-}
+    <div>
+      <div className="login-page-container">
+        <div className="left-image">
 
-export default LoginFormPage;
+          <img
+            src={
+              "https://cdn.robinhood.com/assets/generated_assets/webapp/632fcb3e7ed928b2a960f3e003d10b44.jpg"
+            }
+            alt="login"
+          />
+        </div>
+        <div className="right-login-container">
+          <LoginForm />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;

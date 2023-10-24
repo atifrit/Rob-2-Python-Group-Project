@@ -7,10 +7,26 @@ watchlists_routes = Blueprint('watchlists', __name__)
 @watchlists_routes.route('/')
 @login_required
 def get_watchlists_for_current_user():
-
     user_watchlists = Watchlist.query.filter_by(user_id=current_user.id).all()
 
+    watchlists_data = []
 
-    watchlists_data = [{"id": watchlist.id} for watchlist in user_watchlists]
+    for watchlist in user_watchlists:
+        watchlist_stocks = WatchlistStock.query.filter_by(watchlist_id=watchlist.id).all()
+
+        watchlist_data = {
+            "id": watchlist.id,
+            "watchlist_stocks": [
+                {
+                    "company_id": ws.company_id,
+                    "ticker": ws.company.ticker,
+                    "price": ws.company.price,
+
+                }
+                for ws in watchlist_stocks
+            ],
+        }
+
+        watchlists_data.append(watchlist_data)
 
     return jsonify(watchlists_data)

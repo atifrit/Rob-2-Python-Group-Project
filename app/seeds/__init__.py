@@ -35,7 +35,7 @@ def seed():
     seed_portfolios()
     seed_transactions()
     seed_watchlists()
-    seed_watchlist_stocks
+    seed_watchlist_stocks()
 
 
 

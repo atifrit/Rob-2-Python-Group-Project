@@ -7,8 +7,11 @@ from flask_login import LoginManager
 from .models import db, User
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
+from .api.stock_details_routes import companies
+from .api.watchlists_routes import watchlists_routes
 from .seeds import seed_commands
 from .config import Config
+
 
 app = Flask(__name__, static_folder='../react-app/build', static_url_path='/')
 
@@ -28,6 +31,8 @@ app.cli.add_command(seed_commands)
 app.config.from_object(Config)
 app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
+app.register_blueprint(companies, url_prefix='/api/companies')
+app.register_blueprint(watchlists_routes, url_prefix='/api/watchlists')
 db.init_app(app)
 Migrate(app, db)
 

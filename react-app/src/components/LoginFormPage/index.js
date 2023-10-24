@@ -50,7 +50,6 @@ function LoginFormPage() {
         </label>
         <button type="submit">Log In</button>
       </form>
-      <button onClick={(e) => dispatch(login('demo@aa.io', 'password'))}>Demo User</button>
     </>
   );
 }

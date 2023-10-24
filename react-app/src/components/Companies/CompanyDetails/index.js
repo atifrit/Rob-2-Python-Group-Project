@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getCompanyById } from "../../../store/companies";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
@@ -21,48 +19,48 @@ const CompanyDetails = () => {
   console.log(company);
 
 
-  // let options = {title: {
-  //   display: true,
-  //   text: 'Chart.js Line Chart',
-  // },}
+  let options = {title: {
+    display: true,
+    text: 'Chart.js Line Chart',
+  },}
 
-  // function choose(arr) {
-  //   let i = Math.floor(Math.random()*arr.length)
-  //   return arr[i]
-  // }
+  function choose(arr) {
+    let i = Math.floor(Math.random()*arr.length)
+    return arr[i]
+  }
 
-  // Progressions = [[ 1, 2, -1, 2, 3, -1 ],[ -1, -1, 1, -1, -1, 1 ]]
+  let Progressions = [[ 1, 2, -1, 2, 3, -1 ],[ -1, -1, 1, -1, -1, 1 ]]
 
 
-  // function priceGenerator(base, num, progressions) {
-  //   let trend = choose(progressions)
+  function priceGenerator(base, num, progressions) {
+    let trend = choose(progressions)
 
-  //   let prices = []
-  //   let val = base
+    let prices = []
+    let val = base
 
-  //   for (let i=0; i<num; i++) {
-  //     stockval = val + (choose(trend)*Math.random())
-  //     prices.push(stockval.toFixed(2))
-  //     val = stockval
-  //   }
+    for (let i=0; i<num; i++) {
+      let stockval = val + (choose(trend)*Math.random())
+      prices.push(stockval.toFixed(2))
+      val = stockval
+    }
 
-  //   return prices
-  // }
+    return prices
+  }
 
-  // let prices = priceGenerator(company.price, 30, Progressions)
+  let prices = priceGenerator(company.price, 30, Progressions)
 
-  // let data = [{
-  //   labels: ['30 days ago', 'today'],
-  //   datasets: [{
-  //     label:`${company.name}`,
-  //     data: prices
-  //   }]
-  // }]
+  let data = {
+    labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29].reverse(),
+    datasets: [{
+      label:`${company.name}`,
+      data: prices
+    }]
+  }
   return (
     <div className="company-details">
-      {/* <div className='detailsgraph'>
+      <div className='detailsgraph'>
         <Line options={options} data={data} />
-      </div> */}
+      </div>
 
       <div className="company-about">
         <h2>About</h2>

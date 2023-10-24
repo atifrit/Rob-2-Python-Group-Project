@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../store/session';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
 import logo from '../Images/logo.png';
@@ -8,6 +9,11 @@ import github from '../Images/github.svg';
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div className='nav-container'>
@@ -53,16 +59,21 @@ function Navigation({ isLoaded }) {
         </div>
       </div>
       <div className="right-nav-container">
-          <NavLink className="login" to="/login">
-            {" "}
-            Log in
-          </NavLink>
-
-          <NavLink className="signup" to="/sign-up">
-            {" "}
-            Sign up
-          </NavLink>
-        </div>
+        {sessionUser ? (
+          <button onClick={handleLogout} className="logout">
+            Logout
+          </button>
+        ) : (
+          <>
+            <NavLink className="login" to="/login">
+              Log in
+            </NavLink>
+            <NavLink className="signup" to="/sign-up">
+              Sign up
+            </NavLink>
+          </>
+        )}
+      </div>
     </div>
   );
 }

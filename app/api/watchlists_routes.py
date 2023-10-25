@@ -69,3 +69,30 @@ def delete_watchlist(watchlist_id):
     db.session.commit()
 
     return jsonify({"message": "Watchlist deleted successfully"}), 200
+
+
+@watchlists_routes.route('/<int:watchlist_id>/add-company/<int:company_id>', methods=['POST'])
+@login_required
+def add_company_to_watchlist(watchlist_id, company_id):
+
+    watchlist = Watchlist.query.get(watchlist_id)
+    if watchlist.user_id != current_user.id:
+        return jsonify({"error": "Unauthorized"}), 401
+
+
+    company = Company.query.get(company_id)
+    if not company:
+        return jsonify({"error": "Company not found"}), 404
+
+
+    existing_watchlist_stock = WatchlistStock.query.filter_by(watchlist_id=watchlist_id, company_id=company_id).first()
+    if existing_watchlist_stock:
+        return jsonify({"error": "Company already in the watchlist"}), 400
+
+
+    watchlist_stock = WatchlistStock(watchlist_id=watchlist_id, company_id=company_id)
+    db.session.add(watchlist_stock)
+    db.session.commit()
+
+
+    return jsonify({"message": "Company added to watchlist"}), 200

@@ -2,6 +2,7 @@ const GET_USER_WATCHLIST = "watchlists/GET_USER_WATCHLIST";
 const CREATE_WATCHLIST = "watchlists/CREATE_WATCHLIST";
 const DELETE_WATCHLIST = "watchlists/DELETE_WATCHLIST";
 const ADD_STOCK_TO_WATCHLIST = "watchlists/ADD_STOCK_TO_WATCHLIST";
+const REMOVE_STOCK_FROM_WATCHLIST = "watchlists/REMOVE_STOCK_FROM_WATCHLIST";
 
 const setUserWatchlist = (watchlist) => ({
   type: GET_USER_WATCHLIST,
@@ -21,6 +22,11 @@ const deleteWatchlist = (watchlistId) => ({
 const addStockToWatchlist = (watchlistId, stock) => ({
   type: ADD_STOCK_TO_WATCHLIST,
   payload: { watchlistId, stock },
+});
+
+const removeStockFromWatchlist = (watchlistId, companyId) => ({
+  type: REMOVE_STOCK_FROM_WATCHLIST,
+  payload: { watchlistId, companyId },
 });
 
 export const getUserWatchlist = () => async (dispatch) => {
@@ -87,6 +93,24 @@ export const addStockToWatchlistById =
     }
   };
 
+export const removeStockFromWatchlistById =
+  (watchlistId, companyId) => async (dispatch) => {
+    try {
+      const response = await fetch(
+        `/api/watchlists/${watchlistId}/remove-company/${companyId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) throw response;
+
+      dispatch(removeStockFromWatchlist(watchlistId, companyId));
+    } catch (error) {
+      console.error("Error removing stock from watchlist:", error);
+    }
+  };
+
 const initialState = {
   byId: {},
   currentUserWatchlist: null,
@@ -133,6 +157,22 @@ const watchlistReducer = (state = initialState, action) => {
         byId: {
           ...state.byId,
           [watchlistId]: updatedWatchlist,
+        },
+      };
+    case REMOVE_STOCK_FROM_WATCHLIST:
+      const { watchlistId: removeWatchlistId, companyId: removeCompanyId } =
+        action.payload;
+      const updatedWatchlistToRemove = { ...state.byId[removeWatchlistId] };
+      updatedWatchlistToRemove.watchlist_stocks =
+        updatedWatchlistToRemove.watchlist_stocks.filter(
+          (stock) => stock.company_id !== removeCompanyId
+        );
+
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [removeWatchlistId]: updatedWatchlistToRemove,
         },
       };
     default:

@@ -3,8 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getCompanyById } from "../../../store/companies";
 import { Line } from "react-chartjs-2";
-import { addStockToWatchlistById } from "../../../store/watchlists";
-import { getUserWatchlist } from "../../../store/watchlists";
+import {
+  addStockToWatchlistById,
+  removeStockFromWatchlistById,
+  getUserWatchlist,
+} from "../../../store/watchlists";
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
@@ -12,11 +15,23 @@ const CompanyDetails = () => {
   const company = useSelector((state) => state.companies.currentCompany);
   const { currentUserWatchlist } = useSelector((state) => state.watchlists);
   const [selectedWatchlist, setSelectedWatchlist] = useState("");
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
 
   useEffect(() => {
     dispatch(getCompanyById(Number(id)));
     dispatch(getUserWatchlist());
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (company && currentUserWatchlist) {
+      const isInWatchlist = currentUserWatchlist.some((watchlist) =>
+        watchlist.watchlist_stocks.some(
+          (stock) => stock.company_id === company.id
+        )
+      );
+      setIsInWatchlist(isInWatchlist);
+    }
+  }, [company, currentUserWatchlist]);
 
   if (!company) return <div>Loading...</div>;
   console.log(company);
@@ -72,6 +87,14 @@ const CompanyDetails = () => {
     if (selectedWatchlist) {
       dispatch(addStockToWatchlistById(selectedWatchlist, company.id));
       setSelectedWatchlist("");
+      setIsInWatchlist(true);
+    }
+  };
+
+  const handleRemoveFromWatchlist = () => {
+    if (selectedWatchlist && isInWatchlist) {
+      dispatch(removeStockFromWatchlistById(selectedWatchlist, company.id));
+      setIsInWatchlist(false);
     }
   };
 
@@ -139,7 +162,13 @@ const CompanyDetails = () => {
               </option>
             ))}
         </select>
-        <button onClick={handleAddToWatchlist}>Add to Watchlist</button>
+        {isInWatchlist ? (
+          <button onClick={handleRemoveFromWatchlist}>
+            Remove from Watchlist
+          </button>
+        ) : (
+          <button onClick={handleAddToWatchlist}>Add to Watchlist</button>
+        )}
       </div>
     </div>
   );

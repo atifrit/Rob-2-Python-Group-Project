@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getUserPortfolio } from "../../store/portfolios";
 import { getUserWatchlist } from "../../store/watchlists";
+import { Link } from "react-router-dom";
 
 const PortfolioDetails = () => {
   const dispatch = useDispatch();
@@ -32,7 +33,9 @@ const PortfolioDetails = () => {
       <ul>
         {transactions.map((transaction, index) => (
           <li key={index}>
-            {transaction.ticker}
+            <Link to={`/companies/${transaction.company_id}`}>
+              {transaction.ticker}
+            </Link>
             <br />
             {transaction.shares_owned} shares
             <br />
@@ -47,7 +50,9 @@ const PortfolioDetails = () => {
           <ul>
             {watchlist.watchlist_stocks.map((item, index) => (
               <li key={index}>
-                Ticker: {item.ticker}
+                <Link to={`/companies/${item.company_id}`}>
+                  Ticker: {item.ticker}
+                </Link>
                 <br />
                 Price: ${item.price.toFixed(2)}
                 <br />

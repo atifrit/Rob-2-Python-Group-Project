@@ -25,6 +25,7 @@ def get_current_user_portfolio():
 
 
             transaction_details.append({
+                'company_id': company.id,
                 'company_name': company.name,
                 'shares_owned': transaction.shares,
                 'sold': transaction.sold,

@@ -16,6 +16,7 @@ def get_watchlists_for_current_user():
 
         watchlist_data = {
             "id": watchlist.id,
+             "name": watchlist.name,
             "watchlist_stocks": [
                 {
                     "company_id": ws.company_id,

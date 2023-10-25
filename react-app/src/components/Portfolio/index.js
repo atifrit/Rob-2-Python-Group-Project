@@ -23,7 +23,6 @@ const PortfolioDetails = () => {
   }
 
   const transactions = currentUserPortfolio.transactions || [];
-  const watchlistItems = currentUserWatchlist[0].watchlist_stocks || [];
 
   return (
     <div>
@@ -42,16 +41,21 @@ const PortfolioDetails = () => {
       </ul>
 
       <h3>Watchlists</h3>
-      <ul>
-        {watchlistItems.map((item, index) => (
-          <li key={index}>
-            Ticker: {item.ticker}
-            <br />
-            Price: ${item.price.toFixed(2)}
-            <br />
-          </li>
-        ))}
-      </ul>
+      {currentUserWatchlist.map((watchlist, watchlistIndex) => (
+        <div key={watchlistIndex}>
+          <h4>{watchlist.name}</h4>
+          <ul>
+            {watchlist.watchlist_stocks.map((item, index) => (
+              <li key={index}>
+                Ticker: {item.ticker}
+                <br />
+                Price: ${item.price.toFixed(2)}
+                <br />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 };

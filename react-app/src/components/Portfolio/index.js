@@ -1,14 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import { getUserPortfolio } from "../../store/portfolios";
-import { getUserWatchlist } from "../../store/watchlists";
+import {
+  getUserWatchlist,
+  createNewWatchlist,
+  deleteWatchlistById,
+} from "../../store/watchlists";
 import { Link } from "react-router-dom";
 
 const PortfolioDetails = () => {
   const dispatch = useDispatch();
   const { currentUserPortfolio } = useSelector((state) => state.portfolios);
   const { currentUserWatchlist } = useSelector((state) => state.watchlists);
+  const [newWatchlistName, setNewWatchlistName] = useState("");
 
   useEffect(() => {
     if (!currentUserPortfolio) {
@@ -24,6 +28,18 @@ const PortfolioDetails = () => {
   }
 
   const transactions = currentUserPortfolio.transactions || [];
+
+  const handleCreateWatchlist = () => {
+    dispatch(createNewWatchlist(newWatchlistName));
+
+    setNewWatchlistName("");
+  };
+
+  const handleDeleteWatchlist = (watchlistId) => {
+    if (window.confirm("Are you sure you want to delete this watchlist?")) {
+      dispatch(deleteWatchlistById(watchlistId));
+    }
+  };
 
   return (
     <div>
@@ -47,6 +63,9 @@ const PortfolioDetails = () => {
       {currentUserWatchlist.map((watchlist, watchlistIndex) => (
         <div key={watchlistIndex}>
           <h4>{watchlist.name}</h4>
+          <button onClick={() => handleDeleteWatchlist(watchlist.id)}>
+            Delete Watchlist
+          </button>
           <ul>
             {watchlist.watchlist_stocks.map((item, index) => (
               <li key={index}>
@@ -61,6 +80,16 @@ const PortfolioDetails = () => {
           </ul>
         </div>
       ))}
+
+      <div>
+        <input
+          type="text"
+          placeholder="New Watchlist Name"
+          value={newWatchlistName}
+          onChange={(e) => setNewWatchlistName(e.target.value)}
+        />
+        <button onClick={handleCreateWatchlist}>Create New Watchlist</button>
+      </div>
     </div>
   );
 };

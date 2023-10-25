@@ -29,49 +29,74 @@ function SignupFormPage() {
 
   return (
     <>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <ul>
-          {errors.map((error, idx) => <li key={idx}>{error}</li>)}
-        </ul>
-        <label>
-          Email
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Username
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Confirm Password
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit">Sign Up</button>
-      </form>
+      <div className="signup-container">
+        <div className="left-signup-container">
+          <div className="header">Placeholder signup title</div>
+          <div className="description">
+          We'll need your username, email address, and a unique password. You'll use this login to access Canaryhood next time.
+          </div>
+          <div className="bottom-image">
+            <img src={"https://cdn.robinhood.com/app_assets/odyssey/rockets.png"} />
+          </div>
+        </div>
+        <div className="right-signup-container">
+          <div className="signup-title">Create your login</div>
+          <ul className="signup-errors">
+            {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+          </ul>
+          <div className="signup-form-container">
+            <form onSubmit={handleSubmit}>
+              <div className="signup-inputs">
+                <div>
+                <input
+                  type="text"
+                  name="signup"
+                  value={email}
+                  placeholder="Email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                </div>
+              </div>
+              <div className="signup-inputs">
+                <div>
+                <input
+                  type="text"
+                  name="signup"
+                  value={username}
+                  placeholder="Username"
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+                </div>
+              </div>
+              <div className="signup-inputs">
+                <div>
+                <input
+                  type="password"
+                  name="signup"
+                  value={password}
+                  placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                </div>
+                <div>
+                <input
+                  type="password"
+                  name="signup"
+                  value={confirmPassword}
+                  placeholder="Confirm Password"
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                </div>
+              </div>
+              <button id="signup-submit-button" type="submit">Sign Up</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

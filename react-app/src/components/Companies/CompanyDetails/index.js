@@ -111,6 +111,10 @@ const CompanyDetails = () => {
     }
   };
 
+  const fetchWatchlists = () => {
+    dispatch(getUserWatchlist());
+  };
+
   return (
     <div className="company-details">
       <div className="detailsgraph">
@@ -164,6 +168,7 @@ const CompanyDetails = () => {
 
       <div className="add-to-watchlist">
         <select
+          onFocus={fetchWatchlists}
           value={selectedWatchlist}
           onChange={(e) => setSelectedWatchlist(e.target.value)}
         >

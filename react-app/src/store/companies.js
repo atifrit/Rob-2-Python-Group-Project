@@ -38,6 +38,10 @@ const initialState = {
   currentCompany: null,
 };
 
+export const buyStocksThunkActionCreator = () => dispatch => {
+
+}
+
 const companiesReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_COMPANYBYID:

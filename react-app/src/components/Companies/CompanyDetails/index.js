@@ -7,7 +7,10 @@ import {
   addStockToWatchlistById,
   removeStockFromWatchlistById,
   getUserWatchlist,
-} from "../../../store/watchlists";
+} from "../../../store/watchlists";import OpenModalButton from "../../OpenModalButton";
+import BuyFormModal from "../../BuyFormModal";
+import SellFormModal from "../../SellFormModal";
+
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
@@ -16,6 +19,15 @@ const CompanyDetails = () => {
   const { currentUserWatchlist } = useSelector((state) => state.watchlists);
   const [selectedWatchlist, setSelectedWatchlist] = useState("");
   const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const user = useSelector((state) => state.session.user);
+
+  console.log('comapny: ', company);
+
+  const [showMenu, setShowMenu] = useState(false);
+
+  const closeMenu = (e) => {
+    setShowMenu(false);
+  };
 
   useEffect(() => {
     dispatch(getCompanyById(Number(id)));
@@ -37,6 +49,19 @@ const CompanyDetails = () => {
       setIsInWatchlist(isStockInSelectedWatchlist);
     }
   }, [company, currentUserWatchlist, selectedWatchlist]);
+
+  const openMenu = () => {
+    if (showMenu) return;
+    setShowMenu(true);
+  };
+
+  useEffect(() => {
+    if (!showMenu) return;
+
+    document.addEventListener("click", closeMenu);
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [showMenu]);
 
   if (!company) return <div>Loading...</div>;
 
@@ -193,6 +218,18 @@ const CompanyDetails = () => {
             Add to Watchlist
           </button>
         )}
+      </div>
+      <div>
+        <OpenModalButton
+          buttonText="Buy"
+          onItemClick={closeMenu}
+          modalComponent={<BuyFormModal prices={prices} id={user.id} companyId={company.id}/>}
+        />
+        <OpenModalButton
+          buttonText="Sell"
+          onItemClick={closeMenu}
+          modalComponent={<SellFormModal prices={prices} id={user.id} companyId={company.id}/>}
+        />
       </div>
     </div>
   );

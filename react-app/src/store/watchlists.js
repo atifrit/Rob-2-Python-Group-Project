@@ -55,6 +55,7 @@ export const createNewWatchlist = (name) => async (dispatch) => {
     const data = await response.json();
 
     dispatch(createWatchlist(data));
+    dispatch(getUserWatchlist());
   } catch (error) {
     console.error("Error creating a new watchlist:", error);
   }
@@ -69,6 +70,7 @@ export const deleteWatchlistById = (watchlistId) => async (dispatch) => {
     if (!response.ok) throw response;
 
     dispatch(deleteWatchlist(watchlistId));
+    dispatch(getUserWatchlist());
   } catch (error) {
     console.error("Error deleting watchlist:", error);
   }

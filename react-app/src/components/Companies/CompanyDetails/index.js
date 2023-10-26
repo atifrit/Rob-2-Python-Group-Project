@@ -23,18 +23,22 @@ const CompanyDetails = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (company && currentUserWatchlist) {
-      const isInWatchlist = currentUserWatchlist.some((watchlist) =>
-        watchlist.watchlist_stocks.some(
-          (stock) => stock.company_id === company.id
-        )
+    if (company && currentUserWatchlist && selectedWatchlist) {
+      const targetWatchlist = currentUserWatchlist.find(
+        (watchlist) => watchlist.id === parseInt(selectedWatchlist, 10)
       );
-      setIsInWatchlist(isInWatchlist);
+
+      const isStockInSelectedWatchlist = targetWatchlist
+        ? targetWatchlist.watchlist_stocks.some(
+            (stock) => stock.company_id === company.id
+          )
+        : false;
+
+      setIsInWatchlist(isStockInSelectedWatchlist);
     }
-  }, [company, currentUserWatchlist]);
+  }, [company, currentUserWatchlist, selectedWatchlist]);
 
   if (!company) return <div>Loading...</div>;
-  console.log(company);
 
   let options = {
     title: {
@@ -83,18 +87,27 @@ const CompanyDetails = () => {
     ],
   };
 
-  const handleAddToWatchlist = () => {
+  const handleAddToWatchlist = async () => {
     if (selectedWatchlist) {
-      dispatch(addStockToWatchlistById(selectedWatchlist, company.id));
-      setSelectedWatchlist("");
-      setIsInWatchlist(true);
+      if (!isInWatchlist) {
+        await dispatch(addStockToWatchlistById(selectedWatchlist, company.id));
+        dispatch(getUserWatchlist());
+      }
+
+      // setSelectedWatchlist("");
     }
   };
 
-  const handleRemoveFromWatchlist = () => {
-    if (selectedWatchlist && isInWatchlist) {
-      dispatch(removeStockFromWatchlistById(selectedWatchlist, company.id));
-      setIsInWatchlist(false);
+  const handleRemoveFromWatchlist = async () => {
+    if (selectedWatchlist) {
+      if (isInWatchlist) {
+        await dispatch(
+          removeStockFromWatchlistById(selectedWatchlist, company.id)
+        );
+        dispatch(getUserWatchlist());
+      }
+
+      // setSelectedWatchlist("");
     }
   };
 
@@ -162,12 +175,18 @@ const CompanyDetails = () => {
               </option>
             ))}
         </select>
-        {isInWatchlist ? (
-          <button onClick={handleRemoveFromWatchlist}>
-            Remove from Watchlist
-          </button>
+        {selectedWatchlist ? (
+          isInWatchlist ? (
+            <button onClick={handleRemoveFromWatchlist}>
+              Remove from Watchlist
+            </button>
+          ) : (
+            <button onClick={handleAddToWatchlist}>Add to Watchlist</button>
+          )
         ) : (
-          <button onClick={handleAddToWatchlist}>Add to Watchlist</button>
+          <button onClick={handleAddToWatchlist} disabled>
+            Add to Watchlist
+          </button>
         )}
       </div>
     </div>

@@ -7,7 +7,8 @@ import {
   addStockToWatchlistById,
   removeStockFromWatchlistById,
   getUserWatchlist,
-} from "../../../store/watchlists";import OpenModalButton from "../../OpenModalButton";
+} from "../../../store/watchlists";
+import OpenModalButton from "../../OpenModalButton";
 import BuyFormModal from "../../BuyFormModal";
 import SellFormModal from "../../SellFormModal";
 import { getUserPortfolio } from "../../../store/portfolios";
@@ -142,6 +143,10 @@ const CompanyDetails = () => {
     }
   };
 
+  const fetchWatchlists = () => {
+    dispatch(getUserWatchlist());
+  };
+
   return (
     <div className="company-details">
       <div className="detailsgraph">
@@ -195,6 +200,7 @@ const CompanyDetails = () => {
 
       <div className="add-to-watchlist">
         <select
+          onFocus={fetchWatchlists}
           value={selectedWatchlist}
           onChange={(e) => setSelectedWatchlist(e.target.value)}
         >

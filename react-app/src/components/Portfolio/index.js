@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Line } from "react-chartjs-2";
 import { getUserPortfolio } from "../../store/portfolios";
@@ -13,6 +12,7 @@ import "./portfolio.css";
 import OpenModalButton from "../OpenModalButton";
 import DeleteWatchlistFormModal from "../DeleteWatchlistFormModal";
 import { useModal } from "../../context/Modal";
+import { useEffect, useState } from "react";
 
 const PortfolioDetails = () => {
   const dispatch = useDispatch();

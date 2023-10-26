@@ -10,6 +10,9 @@ import {
 import { Link } from "react-router-dom";
 import { getAllCompanies } from "../../store/companies";
 import "./portfolio.css";
+import OpenModalButton from "../OpenModalButton";
+import DeleteWatchlistFormModal from "../DeleteWatchlistFormModal";
+import { useModal } from "../../context/Modal";
 
 const PortfolioDetails = () => {
   const dispatch = useDispatch();
@@ -17,6 +20,8 @@ const PortfolioDetails = () => {
   const { currentUserWatchlist } = useSelector((state) => state.watchlists);
   const [newWatchlistName, setNewWatchlistName] = useState("");
   const allCompanies = useSelector((state) => state.companies.byId);
+  const { modalContent, setModalContent } = useModal();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!currentUserPortfolio) {
@@ -25,7 +30,27 @@ const PortfolioDetails = () => {
     if (!currentUserWatchlist) {
       dispatch(getUserWatchlist());
     }
-  }, [dispatch, currentUserPortfolio, currentUserWatchlist]);
+
+    const handleClickOutsideModal = (e) => {
+      if (modalContent && isModalOpen && !e.target.closest(".modal-content")) {
+        setIsModalOpen(false);
+        setModalContent(null);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutsideModal);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutsideModal);
+    };
+  }, [
+    dispatch,
+    currentUserPortfolio,
+    currentUserWatchlist,
+    modalContent,
+    isModalOpen,
+    setModalContent,
+  ]);
 
   useEffect(() => {
     if (Object.values(allCompanies).length < 1) {
@@ -46,9 +71,13 @@ const PortfolioDetails = () => {
   };
 
   const handleDeleteWatchlist = (watchlistId) => {
-    if (window.confirm("Are you sure you want to delete this watchlist?")) {
-      dispatch(deleteWatchlistById(watchlistId));
-    }
+    setIsModalOpen(true);
+    setModalContent(
+      <DeleteWatchlistFormModal
+        watchlistId={watchlistId}
+        onClose={() => setIsModalOpen(false)}
+      />
+    );
   };
 
   let allPrices;
@@ -247,6 +276,7 @@ const PortfolioDetails = () => {
           </div>
         </div>
       </div>
+      {isModalOpen && modalContent}
     </div>
   );
 };

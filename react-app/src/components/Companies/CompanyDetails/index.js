@@ -7,10 +7,10 @@ import {
   addStockToWatchlistById,
   removeStockFromWatchlistById,
   getUserWatchlist,
-} from "../../../store/watchlists";import OpenModalButton from "../../OpenModalButton";
+} from "../../../store/watchlists";
+import OpenModalButton from "../../OpenModalButton";
 import BuyFormModal from "../../BuyFormModal";
 import SellFormModal from "../../SellFormModal";
-
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ const CompanyDetails = () => {
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const user = useSelector((state) => state.session.user);
 
-  console.log('comapny: ', company);
+  console.log("comapny: ", company);
 
   const [showMenu, setShowMenu] = useState(false);
 
@@ -223,12 +223,20 @@ const CompanyDetails = () => {
         <OpenModalButton
           buttonText="Buy"
           onItemClick={closeMenu}
-          modalComponent={<BuyFormModal prices={prices} id={user.id} companyId={company.id}/>}
+          modalComponent={
+            <BuyFormModal prices={prices} id={user.id} companyId={company.id} />
+          }
         />
         <OpenModalButton
           buttonText="Sell"
           onItemClick={closeMenu}
-          modalComponent={<SellFormModal prices={prices} id={user.id} companyId={company.id}/>}
+          modalComponent={
+            <SellFormModal
+              prices={prices}
+              id={user.id}
+              companyId={company.id}
+            />
+          }
         />
       </div>
     </div>

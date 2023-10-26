@@ -60,9 +60,12 @@ function Navigation({ isLoaded }) {
       </div>
       <div className="right-nav-container">
         {sessionUser ? (
-          <button onClick={handleLogout} className="login">
+          <><button onClick={handleLogout} className="login">
             Logout
           </button>
+            <NavLink className="signup" to="/portfolio">
+              Portfolio
+            </NavLink></>
         ) : (
           <>
             <NavLink className="login" to="/login">

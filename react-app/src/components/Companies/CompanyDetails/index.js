@@ -235,7 +235,7 @@ const CompanyDetails = () => {
         <OpenModalButton
           buttonText="Sell"
           onItemClick={closeMenu}
-          modalComponent={<SellFormModal prices={prices} id={user.id} companyId={company.id} user={user}/>}
+          modalComponent={<SellFormModal prices={prices} id={user.id} companyId={company.id} user={user} portfolio={currentUserPortfolio}/>}
         />
       </div>
     </div>

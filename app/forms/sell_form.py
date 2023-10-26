@@ -19,5 +19,6 @@ def valid_number(form, field):
 
 
 class SellForm(FlaskForm):
-    sellCount = IntegerField('sellCount', validators=[DataRequired(), valid_number])
+    negSellCount = IntegerField('sellCount', validators=[DataRequired(), valid_number])
     companyId = IntegerField('companyId', validators=[])
+    balanceDeduct = DecimalField('balanceDeduct', validators=[])

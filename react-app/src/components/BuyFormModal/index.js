@@ -37,7 +37,7 @@ export default function BuyFormModal(props) {
 
     return (
         <>
-            <h1>How Many Stocks Would you Like to Purchase?</h1>
+            <h1>How Many Shares Would you Like to Purchase?</h1>
             <form onSubmit={handleSubmit}>
                 <ul>
                     {errors.map((error, idx) => (

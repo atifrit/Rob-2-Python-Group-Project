@@ -175,9 +175,13 @@ const PortfolioDetails = () => {
   console.log("transactions at index: ", transactions[0]);
   if (allPrices && allPrices.length) {
     for (let i = 0; i < allPrices.length; i++) {
-      priceArrs.push(
-        priceGenerator(Object.values(allPrices[i])[i].price, 30, Progressions)
-      );
+      const currentCompany = allPrices[i];
+      for (const ticker in currentCompany) {
+        if (currentCompany.hasOwnProperty(ticker)) {
+          const price = currentCompany[ticker].price;
+          priceArrs.push(priceGenerator(price, 30, Progressions));
+        }
+      }
     }
   }
 
@@ -186,10 +190,11 @@ const PortfolioDetails = () => {
     for (let i = 0; i < priceArrs[0].length; i++) {
       let sum = 0;
       for (let j = 0; j < priceArrs.length; j++) {
-        console.log(priceArrs[j][i]);
-        sum += priceArrs[j][i];
-        priceData.push(sum);
+        const priceValue = parseFloat(priceArrs[j][i]);
+        console.log(`priceArrs[${j}][${i}]:`, priceArrs[j][i]);
+        sum += priceValue;
       }
+      priceData.push(sum);
     }
   }
 

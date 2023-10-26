@@ -41,3 +41,12 @@ def get_current_user_portfolio():
         })
     else:
         return jsonify({'error': 'Portfolio not found'}), 404
+
+
+
+@portfolio_routes.route('/current', methods=['PUT'])
+@login_required
+def update_user_portfolio_balance():
+    portfolio = Portfolio.query.filter_by(user_id=current_user.id).first()
+    if portfolio:
+        portfolio.balance =

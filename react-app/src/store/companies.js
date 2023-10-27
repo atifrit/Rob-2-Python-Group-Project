@@ -1,5 +1,6 @@
 const GET_COMPANYBYID = "companies/COMPANY_ID";
 const GET_ALL_COMPANIES = '/companies'
+const FIND_STOCKS = 'companies/FIND_STOCKS'
 
 const setCompany = (company) => ({
   type: GET_COMPANYBYID,
@@ -9,6 +10,11 @@ const setCompany = (company) => ({
 const getCompaniesActionCreator = (companies) => ({
   type: GET_ALL_COMPANIES,
   payload: companies
+})
+
+const findStocks = (companies) => ({
+  type: FIND_STOCKS,
+  companies
 })
 
 export const getAllCompanies = () => async (dispatch) => {
@@ -33,9 +39,27 @@ export const getCompanyById = (id) => async (dispatch) => {
   }
 };
 
+export const fetchStockSearch = (name) => async (dispatch) => {
+  const response = await fetch(`/api/companies/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name: name }),
+  });
+  if (response.ok) {
+    const data = await response.json();
+    if (data.errors) {
+        return;
+      }
+      dispatch(findStocks(data));
+    }
+  };
+
 const initialState = {
   byId: {},
   currentCompany: null,
+  searchedStocks: {}
 };
 
 const companiesReducer = (state = initialState, action) => {
@@ -63,6 +87,10 @@ const companiesReducer = (state = initialState, action) => {
       }
     default:
       return state;
+    case FIND_STOCKS:{
+
+      return { ...state, searchedStocks: action.companies }
+    }
   }
 };
 

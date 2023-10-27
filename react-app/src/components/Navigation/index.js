@@ -1,19 +1,60 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { NavLink, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../store/session';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
 import logo from '../Images/logo.png';
 import github from '../Images/github.svg';
+import { fetchStockSearch } from '../../store/companies';
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
   const dispatch = useDispatch();
+  const history = useHistory()
+  const searchedStocks = useSelector((state) => state.companies.searchedStocks);
+  const [searchName, setSearchName] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const inputRef = useRef(null);
+
 
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  useEffect(() => {
+    console.log("fetching");
+    dispatch(fetchStockSearch(searchName));
+  }, [searchName]);
+
+  useEffect(() => {
+    if (!isFocused) {
+      return;
+    }
+    const closeMenu = (event) => {
+      if (event.target.tagName !== "INPUT") {
+        setIsFocused(false);
+      }
+    };
+
+    document.addEventListener("click", closeMenu);
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (!isClicked) {
+      return;
+    }
+    const closeMenu = () => {
+      setIsClicked(false);
+    };
+
+    document.addEventListener("click", closeMenu);
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [isClicked]);
 
   return (
     <div className='nav-container'>
@@ -56,6 +97,51 @@ function Navigation({ isLoaded }) {
             </div>
             </a>
           </div>
+        </div>
+      </div>
+      <div className="home-search-bar-container">
+        <div className="home-search-bar">
+          <div className="home-left-search-box">
+          </div>
+              <input
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                  }
+                }}
+                ref={inputRef}
+                name={
+                  searchName && isFocused ? "expanded-search-bar" : "search-bar"
+                }
+                placeholder="Search"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                onClick={() => {
+                  if (document.activeElement === inputRef.current) {
+                    setIsFocused(true);
+                  }
+                }}
+                autoComplete="off"
+              />
+
+          {searchName && isFocused && (
+            <div className="stock-search-container">
+              {searchedStocks.companies?.map((company, index) => {
+                return (
+                  <div key={index}>
+                    <div className="search-stock-container" onClick={() => history.push(`/companies/${company.id}`)}>
+                      <div className="searched-stock-symbol">
+                        {company.ticker}
+                      </div>
+                      <div className="searched-stock-company">
+                        {company.name}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
       <div className="right-nav-container">

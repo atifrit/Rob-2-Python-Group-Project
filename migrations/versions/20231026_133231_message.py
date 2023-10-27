@@ -1,8 +1,8 @@
-"""initial migration
+"""message
 
-Revision ID: b8e0a5a25f18
+Revision ID: 345ab6eabcce
 Revises: 
-Create Date: 2023-10-24 19:41:05.534253
+Create Date: 2023-10-26 13:32:31.487961
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b8e0a5a25f18'
+revision = '345ab6eabcce'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -63,13 +63,14 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('transactions',
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('portfolio_id', sa.Integer(), nullable=False),
     sa.Column('company_id', sa.Integer(), nullable=False),
     sa.Column('shares', sa.Integer(), nullable=False),
     sa.Column('sold', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['company_id'], ['companies.id'], ),
     sa.ForeignKeyConstraint(['portfolio_id'], ['portfolios.id'], ),
-    sa.PrimaryKeyConstraint('portfolio_id', 'company_id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('watchlist_stocks',
     sa.Column('id', sa.Integer(), nullable=False),

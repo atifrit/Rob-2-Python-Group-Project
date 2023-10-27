@@ -11,6 +11,7 @@ import {
 import OpenModalButton from "../../OpenModalButton";
 import BuyFormModal from "../../BuyFormModal";
 import SellFormModal from "../../SellFormModal";
+import { getUserPortfolio } from "../../../store/portfolios";
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
@@ -20,8 +21,14 @@ const CompanyDetails = () => {
   const [selectedWatchlist, setSelectedWatchlist] = useState("");
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const user = useSelector((state) => state.session.user);
+  const { currentUserPortfolio } = useSelector((state) => state.portfolios);
 
-  console.log("comapny: ", company);
+    useEffect(() => {
+        if (!currentUserPortfolio) {
+          dispatch(getUserPortfolio());
+        }
+      }, [dispatch, currentUserPortfolio]);
+  console.log('comapny: ', company);
 
   const [showMenu, setShowMenu] = useState(false);
 
@@ -223,20 +230,12 @@ const CompanyDetails = () => {
         <OpenModalButton
           buttonText="Buy"
           onItemClick={closeMenu}
-          modalComponent={
-            <BuyFormModal prices={prices} id={user.id} companyId={company.id} />
-          }
+          modalComponent={<BuyFormModal prices={prices} id={user.id} companyId={company.id} portfolio={currentUserPortfolio}/>}
         />
         <OpenModalButton
           buttonText="Sell"
           onItemClick={closeMenu}
-          modalComponent={
-            <SellFormModal
-              prices={prices}
-              id={user.id}
-              companyId={company.id}
-            />
-          }
+          modalComponent={<SellFormModal prices={prices} id={user.id} companyId={company.id} user={user} portfolio={currentUserPortfolio} ticker={company.ticker}/>}
         />
       </div>
     </div>

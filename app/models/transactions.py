@@ -8,8 +8,9 @@ class Transaction(db.Model):
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
 
-    portfolio_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('portfolios.id')), primary_key=True, nullable=False)
-    company_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('companies.id')), primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    portfolio_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('portfolios.id')), nullable=False)
+    company_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('companies.id')), nullable=False)
     shares = db.Column(db.Integer, nullable=False)
     sold = db.Column(db.Boolean, nullable=False)
 

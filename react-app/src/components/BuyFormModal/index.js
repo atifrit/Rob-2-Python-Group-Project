@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useSelector } from "react";
 import { buyStocksThunkActionCreator } from "../../store/companies";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
@@ -10,26 +10,26 @@ export default function BuyFormModal(props) {
     const [errors, setErrors] = useState([]);
     const { closeModal } = useModal();
 
+
+    console.log('userbalance: ', props.user)
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const userData = await fetch(`/api/users/${props.id}`)
 
-        const user = await userData.json();
-        const userId = user.id;
+        const balanceDeduct = props.prices[props.prices.length - 1]*buyCount
+        const userId = props.id;
         const companyId = props.companyId
-
-        console.log('user: ', user);
 
         const data = await fetch('/api/transactions/', {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ buyCount, userId, companyId }),
+            body: JSON.stringify({ buyCount, userId, companyId, balanceDeduct }),
           });
-        if (data) {
-        //   setErrors(data);
-            console.log('errors: ', errors)
+        if (data.status>400) {
+          // setErrors(data);
+          console.log('errors: ', errors)
         } else {
             closeModal()
         }
@@ -37,7 +37,7 @@ export default function BuyFormModal(props) {
 
     return (
         <>
-            <h1>How Many Stocks Would you Like to Purchase?</h1>
+            <h1>How Many Shares Would you Like to Purchase?</h1>
             <form onSubmit={handleSubmit}>
                 <ul>
                     {errors.map((error, idx) => (
@@ -49,12 +49,18 @@ export default function BuyFormModal(props) {
                     <input
                         type="number"
                         value={buyCount}
-                        onChange={(e) => setBuyCount(e.target.value)}
+                        onChange={(e) => {
+                            setBuyCount(e.target.value)
+                            console.log('buycount: ', Number(buyCount) < 1)
+                        }}
                         required
                     />
                 </label>
-                <button type="submit">Purchase</button>
+                <button type="submit" disabled={((props.portfolio.balance>(props.prices[props.prices.length - 1]*buyCount)) && Number(buyCount) >= 1) ? false : true}>Purchase</button>
             </form>
         </>
     )
 }
+
+//(props.portfolio.balance>(props.prices[props.prices.length - 1]*buyCount))
+//Number(buyCount) >= 1

@@ -11,6 +11,7 @@ import { getAllCompanies } from "../../store/companies";
 import "./portfolio.css";
 import OpenModalButton from "../OpenModalButton";
 import DeleteWatchlistFormModal from "../DeleteWatchlistFormModal";
+import AddFundsModal from "../AddFundsModal";
 import { useModal } from "../../context/Modal";
 import { useEffect, useState } from "react";
 
@@ -22,6 +23,8 @@ const PortfolioDetails = () => {
   const allCompanies = useSelector((state) => state.companies.byId);
   const { modalContent, setModalContent } = useModal();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [portfolioBalance, setPortfolioBalance] = useState(null);
 
   useEffect(() => {
     if (!currentUserPortfolio) {
@@ -56,7 +59,15 @@ const PortfolioDetails = () => {
     if (Object.values(allCompanies).length < 1) {
       dispatch(getAllCompanies());
     }
-  }, [dispatch, allCompanies]);
+
+    if (
+      currentUserPortfolio !== null &&
+      currentUserPortfolio.balance !== null
+    ) {
+      setIsLoading(false);
+      setPortfolioBalance(currentUserPortfolio.balance);
+    }
+  }, [dispatch, allCompanies, currentUserPortfolio]);
 
   if (!currentUserPortfolio || !currentUserWatchlist) {
     return <div>Loading...</div>;
@@ -217,6 +228,11 @@ const PortfolioDetails = () => {
     ],
   };
 
+  const handleAddFunds = () => {
+    setIsModalOpen(true);
+    setModalContent(<AddFundsModal onClose={() => setIsModalOpen(false)} />);
+  };
+
   return (
     <div>
       <div className="portfolio-container">
@@ -224,7 +240,16 @@ const PortfolioDetails = () => {
           <div className="detailsgraph">
             <Line options={options} data={data} />
           </div>
-          <p>Funds: ${currentUserPortfolio.balance.toFixed(2)}</p>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <p>
+              Funds: $
+              {portfolioBalance !== null
+                ? portfolioBalance.toFixed(2)
+                : "Loading..."}{" "}
+            </p>
+          )}
           <h3>Stocks</h3>
           <ul>
             {transactions.map((transaction, index) => (
@@ -280,6 +305,9 @@ const PortfolioDetails = () => {
             </button>
           </div>
         </div>
+        <button className="add-funds-btn" onClick={handleAddFunds}>
+          Add Funds
+        </button>
       </div>
       {isModalOpen && modalContent}
     </div>

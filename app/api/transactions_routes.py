@@ -16,6 +16,23 @@ def validation_errors_to_error_messages(validation_errors):
 
 transactions_routes = Blueprint('transactions', __name__)
 
+@transactions_routes.route('/')
+@login_required
+def UserTransactions():
+    print('made it to get route')
+    transactions = Transaction.query.filter_by(portfolio_id=current_user.portfolios[0].id).all()
+    print('transactions: ', transactions[0].company_id)
+
+    transactionObj = {}
+    for i in transactions:
+        company = Company.query.filter_by(id=i.company_id).first()
+        ticker = company.ticker
+        if ticker in transactionObj.keys():
+            transactionObj[ticker].append(i.shares)
+        else:
+            transactionObj[ticker] = [i.shares]
+    return jsonify(transactionObj)
+
 @transactions_routes.route('/', methods=['POST'])
 @login_required
 def Buy():
@@ -61,7 +78,7 @@ def Sell():
     # form['current_price'] = data.prices[len(data.prices) - 1]
     if form.validate_on_submit():
         # Add the user to the session, we are logged in!
-        new_transaction = Transaction(portfolio_id=current_user.portfolios[0].id, company_id=form.data['companyId'], shares=int(form.data['buyCount']), sold=False)
+        new_transaction = Transaction(portfolio_id=current_user.portfolios[0].id, company_id=form.data['companyId'], shares=int(form.data['negSellCount']), sold=False)
         db.session.add(new_transaction)
         new_balance = round(Decimal(current_user.portfolios[0].balance) - Decimal(form.data['balanceDeduct']), 2)
         portfolio = Portfolio.query.filter_by(user_id=current_user.id).first()

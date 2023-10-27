@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useSelector } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./SellForm.css";
@@ -20,16 +20,21 @@ export default function SellFormModal(props) {
         const companyId = props.companyId
         const negSellCount = sellCount*-1
         const balanceDeduct = props.prices[props.prices.length - 1]*negSellCount
+        const ticker = props.ticker
+
+        const response = await fetch('/api/transactions/');
+        const transactionsObj = await response.json()
+        console.log('transactionsObj', transactionsObj);
 
         const data = await fetch('/api/transactions/sell', {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ negSellCount, userId, companyId, balanceDeduct }),
+            body: JSON.stringify({ negSellCount, userId, companyId, balanceDeduct, ticker }),
           });
-        if (data) {
-        //   setErrors(data);
+        if (data.status>400) {
+            // setErrors(data);
             console.log('errors: ', errors)
         } else {
             closeModal()

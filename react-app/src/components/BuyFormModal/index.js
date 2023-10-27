@@ -27,9 +27,9 @@ export default function BuyFormModal(props) {
             },
             body: JSON.stringify({ buyCount, userId, companyId, balanceDeduct }),
           });
-        if (data) {
-        //   setErrors(data);
-            console.log('errors: ', errors)
+        if (data.status>400) {
+          // setErrors(data);
+          console.log('errors: ', errors)
         } else {
             closeModal()
         }

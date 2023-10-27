@@ -58,8 +58,19 @@ const PortfolioDetails = () => {
     setModalContent,
   ]);
 
+  let refreshBool=false
+
+  for (let el in allCompanies) {
+    console.log('allCompanies[el].avg_volume: ', allCompanies[el].avg_volume)
+    if(allCompanies[el].avg_volume) {
+      refreshBool=true
+    }
+  }
+
+
+  console.log('refresbool: ', refreshBool);
   useEffect(() => {
-    if (!allCompanies || Object.values(allCompanies).length < 1) {
+    if (refreshBool || !allCompanies || Object.values(allCompanies).length < 1) {
       dispatch(getAllCompanies());
     }
 
@@ -138,13 +149,15 @@ const PortfolioDetails = () => {
     allPrices = transactions.map((transaction, index) => {
       let resindex;
       for (let i = 0; i < Object.values(allCompanies).length; i++) {
-        console.log('allCompanies: ', allCompanies[i])
-        console.log('transaction ticker:', transaction.ticker)
-        if (transaction.ticker === allCompanies[i][i + 1].ticker) {
+        let company = allCompanies[i][i+1]
+        if(company && transaction.ticker === company.ticker){
           resindex = i;
         }
       }
-      return { [transaction.ticker]: allCompanies[resindex][resindex + 1] };
+      let selectedCompany = allCompanies[resindex];
+      if(selectedCompany) {
+        return { [transaction?.ticker]: allCompanies[resindex][resindex + 1] };
+      }
     });
   }
 

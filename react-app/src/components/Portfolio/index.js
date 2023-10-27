@@ -28,6 +28,66 @@ const PortfolioDetails = () => {
   const [portfolioBalance, setPortfolioBalance] = useState(null);
   const [isCreateWatchlistDisabled, setIsCreateWatchlistDisabled] =
     useState(true);
+  const [chartData, setChartData] = useState(null);
+  const [reRendered, setReRendered] = useState(false);
+
+  const transactions = currentUserPortfolio
+    ? currentUserPortfolio.transactions || []
+    : [];
+
+  let options = {
+    title: {
+      display: true,
+      text: "Chart.js Line Chart",
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+          drawBorder: false,
+          color: "transparent",
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          display: false,
+          beginAtZero: true,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+          drawBorder: false,
+          color: "transparent",
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          display: false,
+          beginAtZero: true,
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 4,
+      },
+    },
+    tooltips: {
+      intersect: false,
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        mode: "nearest",
+        intersect: false,
+        callbacks: {
+          label: function (context) {
+            return `Portfolio value: ${context.parsed.y}`;
+          },
+        },
+      },
+    },
+    responsive: true,
+  };
 
   useEffect(() => {
     if (!currentUserPortfolio) {
@@ -145,134 +205,138 @@ const PortfolioDetails = () => {
 
   let allPrices;
 
-  if (Object.values(allCompanies).length) {
-    allPrices = transactions.map((transaction, index) => {
-      let resindex;
-      for (let i = 0; i < Object.values(allCompanies).length; i++) {
-        let company = allCompanies[i][i+1]
+      if (Object.values(allCompanies).length) {
+        allPrices = transactions.map((transaction, index) => {
+          let resindex;
+          for (let i = 0; i < Object.values(allCompanies).length; i++) {
+            let company = allCompanies[i][i+1]
         if(company && transaction.ticker === company.ticker){
-          resindex = i;
-        }
-      }
-      let selectedCompany = allCompanies[resindex];
+              resindex = i;
+            }
+          }
+          let selectedCompany = allCompanies[resindex];
       if(selectedCompany) {
         return { [transaction?.ticker]: allCompanies[resindex][resindex + 1] };
-      }
+          }
     });
-  }
+      }
 
-  let options = {
-    title: {
-      display: true,
-      text: "Chart.js Line Chart",
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-          drawBorder: false,
-          color: "transparent",
-          zeroLineColor: "transparent",
-        },
-        ticks: {
-          display: false,
-          beginAtZero: true,
-        },
-      },
-      y: {
-        grid: {
-          display: false,
-          drawBorder: false,
-          color: "transparent",
-          zeroLineColor: "transparent",
-        },
-        ticks: {
-          display: false,
-          beginAtZero: true,
-        },
-      },
-    },
-    elements: {
-      point: {
-        radius: 0,
-      },
-    },
-    tooltips: {
-      intersect: false,
-    },
-    plugins: {
-      legend: { display: false },
-      tooltip: { intersect: true },
-    },
-    responsive: true,
-  };
+      function choose(arr) {
+        let i = Math.floor(Math.random() * arr.length);
+        return arr[i];
+      }
 
-  function choose(arr) {
-    let i = Math.floor(Math.random() * arr.length);
-    return arr[i];
-  }
+      let Progressions = [
+        [1, 2, -1, 2, 3, -1],
+        [-1, -1, 1, -1, -1, 1],
+      ];
 
-  let Progressions = [
-    [1, 2, -1, 2, 3, -1],
-    [-1, -1, 1, -1, -1, 1],
-  ];
+      function priceGenerator(base, num, progressions) {
+        let trend = choose(progressions);
 
-  function priceGenerator(base, num, progressions) {
-    let trend = choose(progressions);
+        let prices = [];
+        let val = base;
 
-    let prices = [];
-    let val = base;
+        for (let i = 0; i < num; i++) {
+          let stockval = val + choose(trend) * Math.random();
+          prices.push(stockval.toFixed(2));
+          val = stockval;
+        }
 
-    for (let i = 0; i < num; i++) {
-      let stockval = val + choose(trend) * Math.random();
-      prices.push(stockval.toFixed(2));
-      val = stockval;
-    }
+        return prices;
+      }
 
-    return prices;
-  }
+      let priceArrs = [];
 
-  let priceArrs = [];
-
-  if (allPrices && allPrices.length) {
-    for (let i = 0; i < allPrices.length; i++) {
-      const currentCompany = allPrices[i];
-      for (const ticker in currentCompany) {
-        if (currentCompany.hasOwnProperty(ticker)) {
-          const price = currentCompany[ticker].price;
-          priceArrs.push(priceGenerator(price, 30, Progressions));
+      if (allPrices && allPrices.length) {
+        for (let i = 0; i < allPrices.length; i++) {
+          const currentCompany = allPrices[i];
+          for (const ticker in currentCompany) {
+            if (currentCompany.hasOwnProperty(ticker)) {
+              const price = currentCompany[ticker].price;
+              priceArrs.push(priceGenerator(price, 30, Progressions));
+            }
+          }
         }
       }
-    }
-  }
 
-  let priceData = [];
-  if (priceArrs.length) {
-    for (let i = 0; i < priceArrs[0].length; i++) {
-      let sum = 0;
-      for (let j = 0; j < priceArrs.length; j++) {
-        const priceValue = parseFloat(priceArrs[j][i]);
-        sum += priceValue;
+      let priceData = [];
+      if (priceArrs.length) {
+        for (let i = 0; i < priceArrs[0].length; i++) {
+          let sum = 0;
+          for (let j = 0; j < priceArrs.length; j++) {
+            const priceValue = parseFloat(priceArrs[j][i]);
+            sum += priceValue;
+          }
+          priceData.push(sum);
+        }
       }
-      priceData.push(sum);
+
+      const newChartData = {
+        labels: [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+        ].reverse(),
+        datasets: [
+          {
+            label: "Value",
+            data: priceData,
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor:
+              priceData[0] < priceData[priceData.length - 1] ? "green" : "red",
+            borderWidth: 3,
+          },
+        ],
+      };
+      console.log("Updating chartData to:", newChartData);
+      console.log("Is Chart Data Null?", chartData === null);
+      console.log("Chart Data:", JSON.stringify(chartData));
+      setChartData(newChartData);
+
+      console.log("Updated Chart Data:", JSON.stringify(chartData));
     }
+  }, [chartData, allCompanies, transactions]);
+
+  useEffect(() => {
+    console.log("Updated Chart Data2:", JSON.stringify(chartData));
+  }, [chartData]);
+
+  useEffect(() => {
+    if (!reRendered) {
+      const timer = setTimeout(() => {
+        setChartData(null);
+        setReRendered(true);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [reRendered]);
+
+  if (!currentUserPortfolio || !currentUserWatchlist) {
+    return <div>Loading...</div>;
   }
 
-  let data = {
-    labels: [
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-      21, 22, 23, 24, 25, 26, 27, 28, 29,
-    ].reverse(),
-    datasets: [
-      {
-        label: "Value",
-        data: priceData,
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor:
-          priceData[0] < priceData[priceData.length - 1] ? "green" : "red",
-        borderWidth: 3,
-      },
-    ],
+  const handleCreateWatchlist = () => {
+    if (newWatchlistName.trim() !== "") {
+      dispatch(createNewWatchlist(newWatchlistName));
+      setNewWatchlistName("");
+      setIsCreateWatchlistDisabled(true);
+    }
+  };
+
+  const handleDeleteWatchlist = (watchlistId) => {
+    setIsModalOpen(true);
+    setModalContent(
+      <DeleteWatchlistFormModal
+        watchlistId={watchlistId}
+        onClose={() => setIsModalOpen(false)}
+      />
+    );
+  };
+
+  const handleRemoveFunds = () => {
+    setIsModalOpen(true);
+    setModalContent(<RemoveFundsModal onClose={() => setIsModalOpen(false)} />);
   };
 
   const handleAddFunds = () => {
@@ -285,7 +349,7 @@ const PortfolioDetails = () => {
       <div className="portfolio-container">
         <div className="chart-container">
           <div className="detailsgraph">
-            <Line options={options} data={data} />
+            {chartData && <Line options={options} data={chartData} />}
           </div>
           {isLoading ? (
             <p>Loading...</p>

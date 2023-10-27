@@ -68,7 +68,7 @@ const PortfolioDetails = () => {
     },
     elements: {
       point: {
-        radius: 0,
+        radius: 4,
       },
     },
     tooltips: {
@@ -76,7 +76,15 @@ const PortfolioDetails = () => {
     },
     plugins: {
       legend: { display: false },
-      tooltip: { intersect: true },
+      tooltip: {
+        mode: "nearest",
+        intersect: false,
+        callbacks: {
+          label: function (context) {
+            return `Portfolio value: ${context.parsed.y}`;
+          },
+        },
+      },
     },
     responsive: true,
   };

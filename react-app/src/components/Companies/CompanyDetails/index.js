@@ -112,7 +112,7 @@ const CompanyDetails = () => {
     },
     elements: {
       point: {
-        radius: 0,
+        radius: 4,
       },
     },
     tooltips: {
@@ -120,7 +120,15 @@ const CompanyDetails = () => {
     },
     plugins: {
       legend: { display: false },
-      tooltip: { intersect: true },
+      tooltip: {
+        mode: "nearest",
+        intersect: false,
+        callbacks: {
+          label: function (context) {
+            return `Price: ${context.parsed.y}`;
+          },
+        },
+      },
     },
     responsive: true,
   };

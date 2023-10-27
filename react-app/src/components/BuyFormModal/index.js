@@ -27,9 +27,17 @@ export default function BuyFormModal(props) {
             },
             body: JSON.stringify({ buyCount, userId, companyId, balanceDeduct }),
           });
-        if (data) {
-          // setErrors(data);
-          console.log('data: ', data)
+        if (data.status>400) {
+            let res = await data.json();
+            let errorsStrings = []
+            for (let el of res.errors) {
+                for (let i in el){
+                    if (el[i] === ':') {
+                        errorsStrings.push(el.slice(Number(i) + 1))
+                    }
+                }
+            }
+            setErrors(errorsStrings);
         } else {
             closeModal()
         }

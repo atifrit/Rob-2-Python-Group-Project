@@ -34,9 +34,7 @@ export default function SellFormModal(props) {
             body: JSON.stringify({ negSellCount, userId, companyId, balanceDeduct, ticker }),
           });
         if (data.status>400) {
-            // setErrors(data);
             let res = await data.json();
-            console.log(res);
             let errorsStrings = []
             for (let el of res.errors) {
                 for (let i in el){

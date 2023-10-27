@@ -147,7 +147,6 @@ const PortfolioDetails = () => {
     return <div>Loading...</div>;
   }
 
-  const transactions = currentUserPortfolio.transactions || [];
 
   let transactionObj ={};
   let sharesOwnedArr = [];

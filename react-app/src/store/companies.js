@@ -1,5 +1,6 @@
 const GET_COMPANYBYID = "companies/COMPANY_ID";
-const GET_ALL_COMPANIES = '/companies'
+const GET_ALL_COMPANIES = '/companies';
+const SEARCH_COMPANIES = 'companies/SEARCH_COMPANIES';
 
 const setCompany = (company) => ({
   type: GET_COMPANYBYID,
@@ -33,9 +34,25 @@ export const getCompanyById = (id) => async (dispatch) => {
   }
 };
 
+export const searchCompanies = (query) => async (dispatch) => {
+  try {
+    const response = await fetch(`/api/search/companies?query=${query}`);
+    if (!response.ok) throw response;
+    const data = await response.json();
+
+    dispatch({
+      type: SEARCH_COMPANIES,
+      payload: data,
+    });
+  } catch (error) {
+    console.error('Error searching companies:', error);
+  }
+};
+
 const initialState = {
   byId: {},
   currentCompany: null,
+  searchResults: [],
 };
 
 const companiesReducer = (state = initialState, action) => {
@@ -61,6 +78,12 @@ const companiesReducer = (state = initialState, action) => {
           ...companies
         }
       }
+      case SEARCH_COMPANIES:
+      return {
+        ...state,
+        searchResults: action.payload,
+      };
+
     default:
       return state;
   }

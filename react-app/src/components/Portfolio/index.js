@@ -59,7 +59,7 @@ const PortfolioDetails = () => {
   ]);
 
   useEffect(() => {
-    if (Object.values(allCompanies).length < 1) {
+    if (!allCompanies || Object.values(allCompanies).length < 1) {
       dispatch(getAllCompanies());
     }
 
@@ -77,6 +77,38 @@ const PortfolioDetails = () => {
   }
 
   const transactions = currentUserPortfolio.transactions || [];
+
+  let transactionObj ={};
+  let sharesOwnedArr = [];
+  let tickerCompanyIdObj = {};
+
+  for (let i of transactions) {
+    tickerCompanyIdObj[i.ticker] = i.company_id
+  }
+
+  for (let i of transactions) {
+        let ticker = i.ticker
+        if (Object.keys(transactionObj).includes(ticker)) {
+          transactionObj[ticker].push(i.shares_owned)
+        } else {
+          transactionObj[ticker] = [i.shares_owned]
+        }
+  }
+
+  console.log('transactionObj: ', transactionObj);
+  console.log('transactions: ', transactions)
+
+  for (let key in transactionObj) {
+    let tickObj = {}
+    let sum = 0
+    for (let el of transactionObj[key]) {
+      sum += el
+    }
+    tickObj[key] = sum
+    sharesOwnedArr.push(tickObj)
+  }
+
+  console.log('sharesOwnedArr: ', sharesOwnedArr);
 
   const handleCreateWatchlist = () => {
     if (newWatchlistName.trim() !== "") {
@@ -106,6 +138,8 @@ const PortfolioDetails = () => {
     allPrices = transactions.map((transaction, index) => {
       let resindex;
       for (let i = 0; i < Object.values(allCompanies).length; i++) {
+        console.log('allCompanies: ', allCompanies[i])
+        console.log('transaction ticker:', transaction.ticker)
         if (transaction.ticker === allCompanies[i][i + 1].ticker) {
           resindex = i;
         }
@@ -252,16 +286,25 @@ const PortfolioDetails = () => {
           )}
           <h3>Stocks</h3>
           <ul>
-            {transactions.map((transaction, index) => (
-              <li key={index}>
-                <Link to={`/companies/${transaction.company_id}`}>
-                  {transaction.ticker}
-                </Link>
-                <br />
-                {transaction.shares_owned} shares
-                <br />
-              </li>
-            ))}
+                {sharesOwnedArr.map((stock) => {
+                  if(Number(Object.values(stock)[0]) > 0) {
+                    return (
+                      <li className='portfolioShares'>
+                        {/* /companies/${transactions[Object.keys(stock)[0]].company_id} */}
+                      <Link to={`/companies/${tickerCompanyIdObj[Object.keys(stock)[0]]}`}>
+                        {Object.keys(stock)[0]}
+                      </Link>
+                      <br />
+                      {Object.values(stock)[0]} shares
+                      <br />
+                    </li>
+                    )
+                  } else {
+                    return null
+                  }
+                }
+
+                )}
           </ul>
         </div>
         <div className="info-container">

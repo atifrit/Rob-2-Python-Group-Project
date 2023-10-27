@@ -1,12 +1,15 @@
 """message
 
 Revision ID: 345ab6eabcce
-Revises: 
+Revises:
 Create Date: 2023-10-26 13:32:31.487961
 
 """
 from alembic import op
 import sqlalchemy as sa
+import os
+environment = os.getenv("FLASK_ENV")
+SCHEMA = os.environ.get("SCHEMA")
 
 
 # revision identifiers, used by Alembic.
@@ -39,6 +42,8 @@ def upgrade():
     sa.Column('week_low', sa.Float(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+     if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=40), nullable=False),
@@ -48,6 +53,8 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
+     if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('portfolios',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -55,6 +62,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+     if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('watchlists',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -62,6 +71,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+     if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('transactions',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('portfolio_id', sa.Integer(), nullable=False),
@@ -72,6 +83,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['portfolio_id'], ['portfolios.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+     if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('watchlist_stocks',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('watchlist_id', sa.Integer(), nullable=False),
@@ -80,6 +93,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['watchlist_id'], ['watchlists.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+     if environment == "production":
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
 
 

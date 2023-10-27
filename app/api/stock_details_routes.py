@@ -69,6 +69,8 @@ def find_stocks():
     form = StocksSearchForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     stocks = Company.query.filter(or_(Company.name.ilike(f'%{form.data["name"]}%'), Company.ticker.ilike(f'{form.data["name"]}%'))).order_by(Company.name).limit(6)
-    if len(list(stocks)) > 0:
-        return 200
-    else: return {"errors": "could not find stocks"}
+    if stocks.count() > 0:
+        stocks_data = [{"id": company.id, "name": company.name, "ticker": company.ticker} for company in stocks]
+        return jsonify({'stocks': stocks_data}), 200
+    else:
+        return jsonify({"error": "No stocks found"}), 404

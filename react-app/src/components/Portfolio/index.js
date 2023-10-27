@@ -12,6 +12,7 @@ import "./portfolio.css";
 import OpenModalButton from "../OpenModalButton";
 import DeleteWatchlistFormModal from "../DeleteWatchlistFormModal";
 import AddFundsModal from "../AddFundsModal";
+import RemoveFundsModal from "../RemoveFundsModal";
 import { useModal } from "../../context/Modal";
 import { useEffect, useState } from "react";
 
@@ -25,6 +26,8 @@ const PortfolioDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [portfolioBalance, setPortfolioBalance] = useState(null);
+  const [isCreateWatchlistDisabled, setIsCreateWatchlistDisabled] =
+    useState(true);
 
   useEffect(() => {
     if (!currentUserPortfolio) {
@@ -76,11 +79,12 @@ const PortfolioDetails = () => {
   const transactions = currentUserPortfolio.transactions || [];
 
   const handleCreateWatchlist = () => {
-    dispatch(createNewWatchlist(newWatchlistName));
-
-    setNewWatchlistName("");
+    if (newWatchlistName.trim() !== "") {
+      dispatch(createNewWatchlist(newWatchlistName));
+      setNewWatchlistName("");
+      setIsCreateWatchlistDisabled(true);
+    }
   };
-
   const handleDeleteWatchlist = (watchlistId) => {
     setIsModalOpen(true);
     setModalContent(
@@ -89,6 +93,11 @@ const PortfolioDetails = () => {
         onClose={() => setIsModalOpen(false)}
       />
     );
+  };
+
+  const handleRemoveFunds = () => {
+    setIsModalOpen(true);
+    setModalContent(<RemoveFundsModal onClose={() => setIsModalOpen(false)} />);
   };
 
   let allPrices;
@@ -102,12 +111,9 @@ const PortfolioDetails = () => {
         }
       }
       return { [transaction.ticker]: allCompanies[resindex][resindex + 1] };
-      //[resindex+1].price
     });
   }
 
-  console.log("allPrices: ", allPrices);
-  console.log("currentUserPortfolio: ", currentUserPortfolio);
   let options = {
     title: {
       display: true,
@@ -147,9 +153,6 @@ const PortfolioDetails = () => {
     tooltips: {
       intersect: false,
     },
-    // legend: {
-    //   display: true,
-    // },
     plugins: {
       legend: { display: false },
       tooltip: { intersect: true },
@@ -183,7 +186,7 @@ const PortfolioDetails = () => {
   }
 
   let priceArrs = [];
-  console.log("transactions at index: ", transactions[0]);
+
   if (allPrices && allPrices.length) {
     for (let i = 0; i < allPrices.length; i++) {
       const currentCompany = allPrices[i];
@@ -202,15 +205,12 @@ const PortfolioDetails = () => {
       let sum = 0;
       for (let j = 0; j < priceArrs.length; j++) {
         const priceValue = parseFloat(priceArrs[j][i]);
-        console.log(`priceArrs[${j}][${i}]:`, priceArrs[j][i]);
         sum += priceValue;
       }
       priceData.push(sum);
     }
   }
 
-  console.log("currentUserPortfolio: ", currentUserPortfolio);
-  console.log("Price data:", priceData);
   let data = {
     labels: [
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -295,11 +295,15 @@ const PortfolioDetails = () => {
               type="text"
               placeholder="New Watchlist Name"
               value={newWatchlistName}
-              onChange={(e) => setNewWatchlistName(e.target.value)}
+              onChange={(e) => {
+                setNewWatchlistName(e.target.value);
+                setIsCreateWatchlistDisabled(e.target.value === "");
+              }}
             />
             <button
               className="create-watchlist-btn"
               onClick={handleCreateWatchlist}
+              disabled={isCreateWatchlistDisabled}
             >
               Create New Watchlist
             </button>
@@ -307,6 +311,9 @@ const PortfolioDetails = () => {
         </div>
         <button className="add-funds-btn" onClick={handleAddFunds}>
           Add Funds
+        </button>
+        <button className="withdraw-funds-btn" onClick={handleRemoveFunds}>
+          Withdraw Funds
         </button>
       </div>
       {isModalOpen && modalContent}

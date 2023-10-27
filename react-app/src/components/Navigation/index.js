@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../store/session';
-import ProfileButton from './ProfileButton';
 import './Navigation.css';
-import logo from '../Images/logo.png';
 import github from '../Images/github.svg';
-import { searchCompanies } from '../../store/companies';
+import logo from '../Images/canaryhoodlogo.png'
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
@@ -43,7 +41,7 @@ function Navigation({ isLoaded }) {
       <div className='left-container'>
         <div className='logo-container'>
           <NavLink to="/" id='landing-logo'>
-            Robinclone <img src={logo} alt="logo" />
+            <img src={logo} alt="logo" />
           </NavLink>
         </div>
         <div className='github-links'>

@@ -35,7 +35,17 @@ export default function SellFormModal(props) {
           });
         if (data.status>400) {
             // setErrors(data);
-            console.log('errors: ', errors)
+            let res = await data.json();
+            console.log(res);
+            let errorsStrings = []
+            for (let el of res.errors) {
+                for (let i in el){
+                    if (el[i] === ':') {
+                        errorsStrings.push(el.slice(Number(i) + 1))
+                    }
+                }
+            }
+            setErrors(errorsStrings);
         } else {
             closeModal()
         }
@@ -47,7 +57,7 @@ export default function SellFormModal(props) {
             <form onSubmit={handleSubmit}>
                 <ul>
                     {errors.map((error, idx) => (
-                        <li key={idx}>{error}</li>
+                        <li className="errors" key={idx}>{error}</li>
                     ))}
                 </ul>
                 <label>

@@ -1,8 +1,8 @@
-"""initial migration
+"""message
 
-Revision ID: 192473296fbc
+Revision ID: 345ab6eabcce
 Revises: 
-Create Date: 2023-10-23 16:09:40.304352
+Create Date: 2023-10-26 13:32:31.487961
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '192473296fbc'
+revision = '345ab6eabcce'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -58,17 +58,19 @@ def upgrade():
     op.create_table('watchlists',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('transactions',
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('portfolio_id', sa.Integer(), nullable=False),
     sa.Column('company_id', sa.Integer(), nullable=False),
     sa.Column('shares', sa.Integer(), nullable=False),
     sa.Column('sold', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['company_id'], ['companies.id'], ),
     sa.ForeignKeyConstraint(['portfolio_id'], ['portfolios.id'], ),
-    sa.PrimaryKeyConstraint('portfolio_id', 'company_id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('watchlist_stocks',
     sa.Column('id', sa.Integer(), nullable=False),

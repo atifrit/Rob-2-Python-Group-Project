@@ -64,11 +64,11 @@ def get_company_by_id(company_id):
 
     return jsonify(company_data)
 
-@companies.route('/', methods=["POST"])
+@companies.route('/search', methods=["POST"])
 def find_stocks():
     form = StocksSearchForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     stocks = Company.query.filter(or_(Company.name.ilike(f'%{form.data["name"]}%'), Company.ticker.ilike(f'{form.data["name"]}%'))).order_by(Company.name).limit(6)
     if len(list(stocks)) > 0:
-        return {'stocks': [stock.to_dict() for stock in stocks]}, 200
+        return 200
     else: return {"errors": "could not find stocks"}

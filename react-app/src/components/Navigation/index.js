@@ -24,7 +24,6 @@ function Navigation({ isLoaded }) {
   };
 
   useEffect(() => {
-    console.log("fetching");
     dispatch(fetchStockSearch(searchName));
   }, [searchName]);
 

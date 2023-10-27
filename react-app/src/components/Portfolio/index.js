@@ -208,16 +208,18 @@ const PortfolioDetails = () => {
         allPrices = transactions.map((transaction, index) => {
           let resindex;
           for (let i = 0; i < Object.values(allCompanies).length; i++) {
-            let company = allCompanies[i][i+1]
-        if(company && transaction.ticker === company.ticker){
+            let company = allCompanies[i][i + 1];
+            if (company && transaction.ticker === company.ticker) {
               resindex = i;
             }
           }
           let selectedCompany = allCompanies[resindex];
-      if(selectedCompany) {
-        return { [transaction?.ticker]: allCompanies[resindex][resindex + 1] };
+          if (selectedCompany) {
+            return {
+              [transaction?.ticker]: allCompanies[resindex][resindex + 1],
+            };
           }
-    });
+        });
       }
 
       function choose(arr) {

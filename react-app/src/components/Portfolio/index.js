@@ -268,10 +268,7 @@ const PortfolioDetails = () => {
       <div className="portfolio-container">
         <div className="chart-container">
           <div className="detailsgraph">
-            {console.log("chartData inside JSX:", chartData)}
-            <div style={{ height: "400px", width: "600px" }}>
-              {chartData && <Line options={options} data={chartData} />}
-            </div>
+            {chartData && <Line options={options} data={chartData} />}
           </div>
           {isLoading ? (
             <p>Loading...</p>

@@ -22,13 +22,14 @@ const CompanyDetails = () => {
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const user = useSelector((state) => state.session.user);
   const { currentUserPortfolio } = useSelector((state) => state.portfolios);
+  const [prices, setPrices] = useState([]);
 
-    useEffect(() => {
-        if (!currentUserPortfolio) {
-          dispatch(getUserPortfolio());
-        }
-      }, [dispatch, currentUserPortfolio]);
-  console.log('comapny: ', company);
+  useEffect(() => {
+    if (!currentUserPortfolio) {
+      dispatch(getUserPortfolio());
+    }
+  }, [dispatch, currentUserPortfolio]);
+  console.log("comapny: ", company);
 
   const [showMenu, setShowMenu] = useState(false);
 
@@ -57,6 +58,12 @@ const CompanyDetails = () => {
     }
   }, [company, currentUserWatchlist, selectedWatchlist]);
 
+  useEffect(() => {
+    if (company) {
+      setPrices(priceGenerator(company.price, 30, Progressions));
+    }
+  }, [company]);
+
   const openMenu = () => {
     if (showMenu) return;
     setShowMenu(true);
@@ -77,6 +84,45 @@ const CompanyDetails = () => {
       display: true,
       text: "Chart.js Line Chart",
     },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+          drawBorder: false,
+          color: "transparent",
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          display: false,
+          beginAtZero: true,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+          drawBorder: false,
+          color: "transparent",
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          display: false,
+          beginAtZero: true,
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 0,
+      },
+    },
+    tooltips: {
+      intersect: false,
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: { intersect: true },
+    },
+    responsive: true,
   };
 
   function choose(arr) {
@@ -104,8 +150,6 @@ const CompanyDetails = () => {
     return prices;
   }
 
-  let prices = priceGenerator(company.price, 30, Progressions);
-
   let data = {
     labels: [
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -115,6 +159,9 @@ const CompanyDetails = () => {
       {
         label: `${company.name}`,
         data: prices,
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: prices[0] < prices[prices.length - 1] ? "green" : "red",
+        borderWidth: 3,
       },
     ],
   };
@@ -147,7 +194,7 @@ const CompanyDetails = () => {
     dispatch(getUserWatchlist());
   };
 
-  if(user){
+  if (user) {
     return (
       <div className="company-details">
         <div className="detailsgraph">
@@ -231,12 +278,28 @@ const CompanyDetails = () => {
           <OpenModalButton
             buttonText="Buy"
             onItemClick={closeMenu}
-            modalComponent={<BuyFormModal prices={prices} id={user.id} companyId={company.id} portfolio={currentUserPortfolio}/>}
+            modalComponent={
+              <BuyFormModal
+                prices={prices}
+                id={user.id}
+                companyId={company.id}
+                portfolio={currentUserPortfolio}
+              />
+            }
           />
           <OpenModalButton
             buttonText="Sell"
             onItemClick={closeMenu}
-            modalComponent={<SellFormModal prices={prices} id={user.id} companyId={company.id} user={user} portfolio={currentUserPortfolio} ticker={company.ticker}/>}
+            modalComponent={
+              <SellFormModal
+                prices={prices}
+                id={user.id}
+                companyId={company.id}
+                user={user}
+                portfolio={currentUserPortfolio}
+                ticker={company.ticker}
+              />
+            }
           />
         </div>
       </div>
@@ -292,10 +355,9 @@ const CompanyDetails = () => {
             </tbody>
           </table>
         </div>
-        </div>
-    )
+      </div>
+    );
   }
-
 };
 
 export default CompanyDetails;

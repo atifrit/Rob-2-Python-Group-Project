@@ -119,7 +119,7 @@ const PortfolioDetails = () => {
   ]);
 
   useEffect(() => {
-    if (Object.values(allCompanies).length < 1) {
+    if (Object.values(allCompanies).length <= 1) {
       dispatch(getAllCompanies());
     }
 

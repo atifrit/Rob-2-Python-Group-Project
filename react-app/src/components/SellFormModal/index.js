@@ -46,6 +46,7 @@ export default function SellFormModal(props) {
             setErrors(errorsStrings);
         } else {
             closeModal()
+            window.location.reload()
         }
       };
 

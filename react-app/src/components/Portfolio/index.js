@@ -239,7 +239,7 @@ const PortfolioDetails = () => {
       const timer = setTimeout(() => {
         setChartData(null);
         setReRendered(true);
-      }, 5000);
+      }, 500);
 
       return () => clearTimeout(timer);
     }

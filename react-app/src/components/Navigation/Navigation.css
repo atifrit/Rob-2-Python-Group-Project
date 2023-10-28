@@ -111,3 +111,22 @@
   color: white;
   cursor: pointer;
 }
+
+.search-input{
+  height: 20px;
+  border: solid #e3e9ed 1px;
+}
+
+.search-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid black 1px;
+  border-radius: 50px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.search-container{
+
+}

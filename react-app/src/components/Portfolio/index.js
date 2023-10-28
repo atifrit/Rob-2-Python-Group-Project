@@ -277,6 +277,33 @@ const PortfolioDetails = () => {
     setModalContent(<AddFundsModal onClose={() => setIsModalOpen(false)} />);
   };
 
+  let transactionObj = {};
+  let sharesOwnedArr = [];
+  let tickerCompanyIdObj = {};
+
+  for (let i of transactions) {
+    tickerCompanyIdObj[i.ticker] = i.company_id;
+  }
+
+  for (let i of transactions) {
+    let ticker = i.ticker;
+    if (Object.keys(transactionObj).includes(ticker)) {
+      transactionObj[ticker].push(i.shares_owned);
+    } else {
+      transactionObj[ticker] = [i.shares_owned];
+    }
+  }
+
+  for (let key in transactionObj) {
+    let tickObj = {};
+    let sum = 0;
+    for (let el of transactionObj[key]) {
+      sum += el;
+    }
+    tickObj[key] = sum;
+    sharesOwnedArr.push(tickObj);
+  }
+
   return (
     <div>
       <div className="portfolio-container">
@@ -296,16 +323,27 @@ const PortfolioDetails = () => {
           )}
           <h3>Stocks</h3>
           <ul>
-            {transactions.map((transaction, index) => (
-              <li key={index}>
-                <Link to={`/companies/${transaction.company_id}`}>
-                  {transaction.ticker}
-                </Link>
-                <br />
-                {transaction.shares_owned} shares
-                <br />
-              </li>
-            ))}
+            {sharesOwnedArr.map((stock) => {
+              if (Number(Object.values(stock)[0]) > 0) {
+                return (
+                  <li className="portfolioShares">
+                    {/* /companies/${transactions[Object.keys(stock)[0]].company_id} */}
+                    <Link
+                      to={`/companies/${
+                        tickerCompanyIdObj[Object.keys(stock)[0]]
+                      }`}
+                    >
+                      {Object.keys(stock)[0]}
+                    </Link>
+                    <br />
+                    {Object.values(stock)[0]} shares
+                    <br />
+                  </li>
+                );
+              } else {
+                return null;
+              }
+            })}
           </ul>
         </div>
         <div className="info-container">

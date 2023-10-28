@@ -28,8 +28,16 @@ export default function BuyFormModal(props) {
             body: JSON.stringify({ buyCount, userId, companyId, balanceDeduct }),
           });
         if (data.status>400) {
-          // setErrors(data);
-          console.log('errors: ', errors)
+            let res = await data.json();
+            let errorsStrings = []
+            for (let el of res.errors) {
+                for (let i in el){
+                    if (el[i] === ':') {
+                        errorsStrings.push(el.slice(Number(i) + 1))
+                    }
+                }
+            }
+            setErrors(errorsStrings);
         } else {
             closeModal()
         }
@@ -44,6 +52,7 @@ export default function BuyFormModal(props) {
                         <li key={idx}>{error}</li>
                     ))}
                 </ul>
+                <p>You have ${props.portfolio.balance} remaining</p>
                 <label>
                     Buy:
                     <input

@@ -11,6 +11,8 @@ import { getAllCompanies } from "../../store/companies";
 import "./portfolio.css";
 import OpenModalButton from "../OpenModalButton";
 import DeleteWatchlistFormModal from "../DeleteWatchlistFormModal";
+import AddFundsModal from "../AddFundsModal";
+import RemoveFundsModal from "../RemoveFundsModal";
 import { useModal } from "../../context/Modal";
 import { useEffect, useState } from "react";
 
@@ -22,6 +24,70 @@ const PortfolioDetails = () => {
   const allCompanies = useSelector((state) => state.companies.byId);
   const { modalContent, setModalContent } = useModal();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [portfolioBalance, setPortfolioBalance] = useState(null);
+  const [isCreateWatchlistDisabled, setIsCreateWatchlistDisabled] =
+    useState(true);
+  const [chartData, setChartData] = useState(null);
+  const [reRendered, setReRendered] = useState(false);
+
+  const transactions = currentUserPortfolio
+    ? currentUserPortfolio.transactions || []
+    : [];
+
+  let options = {
+    title: {
+      display: true,
+      text: "Chart.js Line Chart",
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+          drawBorder: false,
+          color: "transparent",
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          display: false,
+          beginAtZero: true,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+          drawBorder: false,
+          color: "transparent",
+          zeroLineColor: "transparent",
+        },
+        ticks: {
+          display: false,
+          beginAtZero: true,
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 4,
+      },
+    },
+    tooltips: {
+      intersect: false,
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        mode: "nearest",
+        intersect: false,
+        callbacks: {
+          label: function (context) {
+            return `Portfolio value: ${context.parsed.y}`;
+          },
+        },
+      },
+    },
+    responsive: true,
+  };
 
   useEffect(() => {
     if (!currentUserPortfolio) {
@@ -56,18 +122,139 @@ const PortfolioDetails = () => {
     if (Object.values(allCompanies).length < 1) {
       dispatch(getAllCompanies());
     }
-  }, [dispatch, allCompanies]);
+
+    if (
+      currentUserPortfolio !== null &&
+      currentUserPortfolio.balance !== null
+    ) {
+      setIsLoading(false);
+      setPortfolioBalance(currentUserPortfolio.balance);
+    }
+  }, [dispatch, allCompanies, currentUserPortfolio]);
+
+  useEffect(() => {
+    if (chartData === null) {
+      let allPrices;
+
+      if (Object.values(allCompanies).length) {
+        allPrices = transactions.map((transaction, index) => {
+          let resindex;
+          for (let i = 0; i < Object.values(allCompanies).length; i++) {
+            let company = allCompanies[i][i + 1];
+            if (company && transaction.ticker === company.ticker) {
+              resindex = i;
+            }
+          }
+          let selectedCompany = allCompanies[resindex];
+          if (selectedCompany) {
+            return {
+              [transaction?.ticker]: allCompanies[resindex][resindex + 1],
+            };
+          }
+        });
+      }
+
+      function choose(arr) {
+        let i = Math.floor(Math.random() * arr.length);
+        return arr[i];
+      }
+
+      let Progressions = [
+        [1, 2, -1, 2, 3, -1],
+        [-1, -1, 1, -1, -1, 1],
+      ];
+
+      function priceGenerator(base, num, progressions) {
+        let trend = choose(progressions);
+
+        let prices = [];
+        let val = base;
+
+        for (let i = 0; i < num; i++) {
+          let stockval = val + choose(trend) * Math.random();
+          prices.push(stockval.toFixed(2));
+          val = stockval;
+        }
+
+        return prices;
+      }
+
+      let priceArrs = [];
+
+      if (allPrices && allPrices.length) {
+        for (let i = 0; i < allPrices.length; i++) {
+          const currentCompany = allPrices[i];
+          for (const ticker in currentCompany) {
+            if (currentCompany.hasOwnProperty(ticker)) {
+              const price = currentCompany[ticker].price;
+              priceArrs.push(priceGenerator(price, 30, Progressions));
+            }
+          }
+        }
+      }
+
+      let priceData = [];
+      if (priceArrs.length) {
+        for (let i = 0; i < priceArrs[0].length; i++) {
+          let sum = 0;
+          for (let j = 0; j < priceArrs.length; j++) {
+            const priceValue = parseFloat(priceArrs[j][i]);
+            sum += priceValue;
+          }
+          priceData.push(sum);
+        }
+      }
+
+      const newChartData = {
+        labels: [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+        ].reverse(),
+        datasets: [
+          {
+            label: "Value",
+            data: priceData,
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor:
+              priceData[0] < priceData[priceData.length - 1] ? "green" : "red",
+            borderWidth: 3,
+          },
+        ],
+      };
+      console.log("Updating chartData to:", newChartData);
+      console.log("Is Chart Data Null?", chartData === null);
+      console.log("Chart Data:", JSON.stringify(chartData));
+      setChartData(newChartData);
+
+      console.log("Updated Chart Data:", JSON.stringify(chartData));
+    }
+  }, [chartData, allCompanies, transactions]);
+
+  useEffect(() => {
+    console.log("Updated Chart Data2:", JSON.stringify(chartData));
+  }, [chartData]);
+
+  useEffect(() => {
+    if (!reRendered) {
+      const timer = setTimeout(() => {
+        setChartData(null);
+        setReRendered(true);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [reRendered]);
 
   if (!currentUserPortfolio || !currentUserWatchlist) {
     return <div>Loading...</div>;
   }
 
-  const transactions = currentUserPortfolio.transactions || [];
-
   const handleCreateWatchlist = () => {
-    dispatch(createNewWatchlist(newWatchlistName));
-
-    setNewWatchlistName("");
+    if (newWatchlistName.trim() !== "") {
+      dispatch(createNewWatchlist(newWatchlistName));
+      setNewWatchlistName("");
+      setIsCreateWatchlistDisabled(true);
+    }
   };
 
   const handleDeleteWatchlist = (watchlistId) => {
@@ -80,163 +267,83 @@ const PortfolioDetails = () => {
     );
   };
 
-  let allPrices;
-
-  if (Object.values(allCompanies).length) {
-    allPrices = transactions.map((transaction, index) => {
-      let resindex;
-      for (let i = 0; i < Object.values(allCompanies).length; i++) {
-        if (transaction.ticker === allCompanies[i][i + 1].ticker) {
-          resindex = i;
-        }
-      }
-      return { [transaction.ticker]: allCompanies[resindex][resindex + 1] };
-      //[resindex+1].price
-    });
-  }
-
-  console.log("allPrices: ", allPrices);
-  console.log("currentUserPortfolio: ", currentUserPortfolio);
-  let options = {
-    title: {
-      display: true,
-      text: "Chart.js Line Chart",
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-          drawBorder: false,
-          color: "transparent",
-          zeroLineColor: "transparent",
-        },
-        ticks: {
-          display: false,
-          beginAtZero: true,
-        },
-      },
-      y: {
-        grid: {
-          display: false,
-          drawBorder: false,
-          color: "transparent",
-          zeroLineColor: "transparent",
-        },
-        ticks: {
-          display: false,
-          beginAtZero: true,
-        },
-      },
-    },
-    elements: {
-      point: {
-        radius: 0,
-      },
-    },
-    tooltips: {
-      intersect: false,
-    },
-    // legend: {
-    //   display: true,
-    // },
-    plugins: {
-      legend: { display: false },
-      tooltip: { intersect: true },
-    },
-    responsive: true,
+  const handleRemoveFunds = () => {
+    setIsModalOpen(true);
+    setModalContent(<RemoveFundsModal onClose={() => setIsModalOpen(false)} />);
   };
 
-  function choose(arr) {
-    let i = Math.floor(Math.random() * arr.length);
-    return arr[i];
-  }
-
-  let Progressions = [
-    [1, 2, -1, 2, 3, -1],
-    [-1, -1, 1, -1, -1, 1],
-  ];
-
-  function priceGenerator(base, num, progressions) {
-    let trend = choose(progressions);
-
-    let prices = [];
-    let val = base;
-
-    for (let i = 0; i < num; i++) {
-      let stockval = val + choose(trend) * Math.random();
-      prices.push(stockval.toFixed(2));
-      val = stockval;
-    }
-
-    return prices;
-  }
-
-  let priceArrs = [];
-  console.log("transactions at index: ", transactions[0]);
-  if (allPrices && allPrices.length) {
-    for (let i = 0; i < allPrices.length; i++) {
-      const currentCompany = allPrices[i];
-      for (const ticker in currentCompany) {
-        if (currentCompany.hasOwnProperty(ticker)) {
-          const price = currentCompany[ticker].price;
-          priceArrs.push(priceGenerator(price, 30, Progressions));
-        }
-      }
-    }
-  }
-
-  let priceData = [];
-  if (priceArrs.length) {
-    for (let i = 0; i < priceArrs[0].length; i++) {
-      let sum = 0;
-      for (let j = 0; j < priceArrs.length; j++) {
-        const priceValue = parseFloat(priceArrs[j][i]);
-        console.log(`priceArrs[${j}][${i}]:`, priceArrs[j][i]);
-        sum += priceValue;
-      }
-      priceData.push(sum);
-    }
-  }
-
-  console.log("currentUserPortfolio: ", currentUserPortfolio);
-  console.log("Price data:", priceData);
-  let data = {
-    labels: [
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-      21, 22, 23, 24, 25, 26, 27, 28, 29,
-    ].reverse(),
-    datasets: [
-      {
-        label: "Value",
-        data: priceData,
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor:
-          priceData[0] < priceData[priceData.length - 1] ? "green" : "red",
-        borderWidth: 3,
-      },
-    ],
+  const handleAddFunds = () => {
+    setIsModalOpen(true);
+    setModalContent(<AddFundsModal onClose={() => setIsModalOpen(false)} />);
   };
+
+  let transactionObj = {};
+  let sharesOwnedArr = [];
+  let tickerCompanyIdObj = {};
+
+  for (let i of transactions) {
+    tickerCompanyIdObj[i.ticker] = i.company_id;
+  }
+
+  for (let i of transactions) {
+    let ticker = i.ticker;
+    if (Object.keys(transactionObj).includes(ticker)) {
+      transactionObj[ticker].push(i.shares_owned);
+    } else {
+      transactionObj[ticker] = [i.shares_owned];
+    }
+  }
+
+  for (let key in transactionObj) {
+    let tickObj = {};
+    let sum = 0;
+    for (let el of transactionObj[key]) {
+      sum += el;
+    }
+    tickObj[key] = sum;
+    sharesOwnedArr.push(tickObj);
+  }
 
   return (
     <div>
       <div className="portfolio-container">
         <div className="chart-container">
           <div className="detailsgraph">
-            <Line options={options} data={data} />
+            {chartData && <Line options={options} data={chartData} />}
           </div>
-          <p>Funds: ${currentUserPortfolio.balance.toFixed(2)}</p>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <p>
+              Funds: $
+              {portfolioBalance !== null
+                ? portfolioBalance.toFixed(2)
+                : "Loading..."}{" "}
+            </p>
+          )}
           <h3>Stocks</h3>
           <ul>
-            {transactions.map((transaction, index) => (
-              <li key={index}>
-                <Link to={`/companies/${transaction.company_id}`}>
-                  {transaction.ticker}
-                </Link>
-                <br />
-                {transaction.shares_owned} shares
-                <br />
-              </li>
-            ))}
+            {sharesOwnedArr.map((stock) => {
+              if (Number(Object.values(stock)[0]) > 0) {
+                return (
+                  <li className="portfolioShares">
+                    {/* /companies/${transactions[Object.keys(stock)[0]].company_id} */}
+                    <Link
+                      to={`/companies/${
+                        tickerCompanyIdObj[Object.keys(stock)[0]]
+                      }`}
+                    >
+                      {Object.keys(stock)[0]}
+                    </Link>
+                    <br />
+                    {Object.values(stock)[0]} shares
+                    <br />
+                  </li>
+                );
+              } else {
+                return null;
+              }
+            })}
           </ul>
         </div>
         <div className="info-container">
@@ -270,16 +377,26 @@ const PortfolioDetails = () => {
               type="text"
               placeholder="New Watchlist Name"
               value={newWatchlistName}
-              onChange={(e) => setNewWatchlistName(e.target.value)}
+              onChange={(e) => {
+                setNewWatchlistName(e.target.value);
+                setIsCreateWatchlistDisabled(e.target.value === "");
+              }}
             />
             <button
               className="create-watchlist-btn"
               onClick={handleCreateWatchlist}
+              disabled={isCreateWatchlistDisabled}
             >
               Create New Watchlist
             </button>
           </div>
         </div>
+        <button className="add-funds-btn" onClick={handleAddFunds}>
+          Add Funds
+        </button>
+        <button className="withdraw-funds-btn" onClick={handleRemoveFunds}>
+          Withdraw Funds
+        </button>
       </div>
       {isModalOpen && modalContent}
     </div>

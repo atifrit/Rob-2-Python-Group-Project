@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../store/session';
@@ -11,10 +11,21 @@ function Navigation({ isLoaded }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const [searchQuery, setSearchQuery] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [results, setResults] = useState([]);
 
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  useEffect(() => {
+    if (searchQuery.length >= 1) {
+      handleSearch();
+    } else {
+      setResults([]);
+      setShowDropdown(false);
+    }
+  }, [searchQuery]);
 
   const handleSearch = async () => {
     try {
@@ -24,16 +35,18 @@ function Navigation({ isLoaded }) {
       }
 
       const data = await response.json();
-
-      if (data.length > 0) {
-        const companyId = data[0].id;
-        history.push(`/companies/${companyId}`);
-      } else {
-        alert('Company not found');
-      }
+      setResults(data);
+      setShowDropdown(true);
     } catch (error) {
       console.error('Error searching companies:', error);
     }
+  };
+
+  const handleResultClick = (companyId) => {
+    history.push(`/companies/${companyId}`);
+    setShowDropdown(false);
+    setResults([]);
+    setSearchQuery('');
   };
 
   return (
@@ -85,9 +98,20 @@ function Navigation({ isLoaded }) {
             type="text"
             placeholder="Enter Company Name"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+            }}
           />
           <button className='search-button' onClick={handleSearch}>Search</button>
+          {showDropdown && results.length > 0 && (
+            <ul className="search-results">
+              {results.map((result) => (
+                <li key={result.id} onClick={() => handleResultClick(result.id)}>
+                  {result.name}
+                </li>
+              ))}
+            </ul>
+          )}
       </div>
       ) : (
         <></>

@@ -317,27 +317,13 @@ const PortfolioDetails = () => {
   return (
     <div>
       <div className="portfolio-container">
-        <div className="chart-container">
-          <div className="detailsgraph">
-            {chartData && <Line options={options} data={chartData} />}
-          </div>
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : (
-            <p>
-              Funds: $
-              {portfolioBalance !== null
-                ? portfolioBalance.toFixed(2)
-                : "Loading..."}{" "}
-            </p>
-          )}
+        <div className="stocks-and-funds-container">
           <h3>Stocks</h3>
           <ul>
             {sharesOwnedArr.map((stock) => {
               if (Number(Object.values(stock)[0]) > 0) {
                 return (
                   <li className="portfolioShares">
-                    {/* /companies/${transactions[Object.keys(stock)[0]].company_id} */}
                     <Link
                       to={`/companies/${
                         tickerCompanyIdObj[Object.keys(stock)[0]]
@@ -355,7 +341,31 @@ const PortfolioDetails = () => {
               }
             })}
           </ul>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <p>
+              Funds: $
+              {portfolioBalance !== null
+                ? portfolioBalance.toFixed(2)
+                : "Loading..."}
+            </p>
+          )}
+
+          <button className="add-funds-btn" onClick={handleAddFunds}>
+            Add Funds
+          </button>
+          <button className="withdraw-funds-btn" onClick={handleRemoveFunds}>
+            Withdraw Funds
+          </button>
         </div>
+
+        <div className="chart-container">
+          <div className="detailsgraph">
+            {chartData && <Line options={options} data={chartData} />}
+          </div>
+        </div>
+
         <div className="info-container">
           <h3>Watchlists</h3>
           {currentUserWatchlist.map((watchlist, watchlistIndex) => (
@@ -371,7 +381,7 @@ const PortfolioDetails = () => {
                 {watchlist.watchlist_stocks.map((item, index) => (
                   <li key={index}>
                     <Link to={`/companies/${item.company_id}`}>
-                      Ticker: {item.ticker}
+                      {item.ticker}
                     </Link>
                     <br />
                     Price: ${item.price.toFixed(2)}
@@ -401,12 +411,6 @@ const PortfolioDetails = () => {
             </button>
           </div>
         </div>
-        <button className="add-funds-btn" onClick={handleAddFunds}>
-          Add Funds
-        </button>
-        <button className="withdraw-funds-btn" onClick={handleRemoveFunds}>
-          Withdraw Funds
-        </button>
       </div>
       {isModalOpen && modalContent}
     </div>

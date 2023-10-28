@@ -15,6 +15,7 @@ import AddFundsModal from "../AddFundsModal";
 import RemoveFundsModal from "../RemoveFundsModal";
 import { useModal } from "../../context/Modal";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const PortfolioDetails = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,13 @@ const PortfolioDetails = () => {
     useState(true);
   const [chartData, setChartData] = useState(null);
   const [reRendered, setReRendered] = useState(false);
+  const history = useHistory();
+  const fetchData = () => {
+    dispatch(getUserPortfolio());
+    dispatch(getUserWatchlist());
+    dispatch(getAllCompanies());
+    setChartData(null);
+  };
 
   const transactions = currentUserPortfolio
     ? currentUserPortfolio.transactions || []
@@ -140,7 +148,7 @@ const PortfolioDetails = () => {
         allPrices = transactions.map((transaction, index) => {
           let resindex;
           for (let i = 0; i < Object.values(allCompanies).length; i++) {
-            let company = allCompanies[i][i + 1];
+            let company = allCompanies[i] ? allCompanies[i][i + 1] : null;
             if (company && transaction.ticker === company.ticker) {
               resindex = i;
             }
@@ -221,18 +229,10 @@ const PortfolioDetails = () => {
           },
         ],
       };
-      console.log("Updating chartData to:", newChartData);
-      console.log("Is Chart Data Null?", chartData === null);
-      console.log("Chart Data:", JSON.stringify(chartData));
-      setChartData(newChartData);
 
-      console.log("Updated Chart Data:", JSON.stringify(chartData));
+      setChartData(newChartData);
     }
   }, [chartData, allCompanies, transactions]);
-
-  useEffect(() => {
-    console.log("Updated Chart Data2:", JSON.stringify(chartData));
-  }, [chartData]);
 
   useEffect(() => {
     if (!reRendered) {
@@ -244,6 +244,16 @@ const PortfolioDetails = () => {
       return () => clearTimeout(timer);
     }
   }, [reRendered]);
+
+  useEffect(() => {
+    fetchData();
+  }, [dispatch]);
+
+  useEffect(() => {
+    return history.listen((location) => {
+      fetchData();
+    });
+  }, [history, dispatch]);
 
   if (!currentUserPortfolio || !currentUserWatchlist) {
     return <div>Loading...</div>;

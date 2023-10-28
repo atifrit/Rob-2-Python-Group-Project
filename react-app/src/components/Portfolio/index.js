@@ -118,19 +118,8 @@ const PortfolioDetails = () => {
     setModalContent,
   ]);
 
-  let refreshBool=false
-
-  for (let el in allCompanies) {
-    console.log('allCompanies[el].avg_volume: ', allCompanies[el].avg_volume)
-    if(allCompanies[el].avg_volume) {
-      refreshBool=true
-    }
-  }
-
-
-  console.log('refresbool: ', refreshBool);
   useEffect(() => {
-    if (refreshBool || !allCompanies || Object.values(allCompanies).length < 1) {
+    if (Object.values(allCompanies).length < 1) {
       dispatch(getAllCompanies());
     }
 
@@ -143,66 +132,9 @@ const PortfolioDetails = () => {
     }
   }, [dispatch, allCompanies, currentUserPortfolio]);
 
-  if (!currentUserPortfolio || !currentUserWatchlist) {
-    return <div>Loading...</div>;
-  }
-
-
-  let transactionObj ={};
-  let sharesOwnedArr = [];
-  let tickerCompanyIdObj = {};
-
-  for (let i of transactions) {
-    tickerCompanyIdObj[i.ticker] = i.company_id
-  }
-
-  for (let i of transactions) {
-        let ticker = i.ticker
-        if (Object.keys(transactionObj).includes(ticker)) {
-          transactionObj[ticker].push(i.shares_owned)
-        } else {
-          transactionObj[ticker] = [i.shares_owned]
-        }
-  }
-
-  console.log('transactionObj: ', transactionObj);
-  console.log('transactions: ', transactions)
-
-  for (let key in transactionObj) {
-    let tickObj = {}
-    let sum = 0
-    for (let el of transactionObj[key]) {
-      sum += el
-    }
-    tickObj[key] = sum
-    sharesOwnedArr.push(tickObj)
-  }
-
-  console.log('sharesOwnedArr: ', sharesOwnedArr);
-
-  const handleCreateWatchlist = () => {
-    if (newWatchlistName.trim() !== "") {
-      dispatch(createNewWatchlist(newWatchlistName));
-      setNewWatchlistName("");
-      setIsCreateWatchlistDisabled(true);
-    }
-  };
-  const handleDeleteWatchlist = (watchlistId) => {
-    setIsModalOpen(true);
-    setModalContent(
-      <DeleteWatchlistFormModal
-        watchlistId={watchlistId}
-        onClose={() => setIsModalOpen(false)}
-      />
-    );
-  };
-
-  const handleRemoveFunds = () => {
-    setIsModalOpen(true);
-    setModalContent(<RemoveFundsModal onClose={() => setIsModalOpen(false)} />);
-  };
-
-  let allPrices;
+  useEffect(() => {
+    if (chartData === null) {
+      let allPrices;
 
       if (Object.values(allCompanies).length) {
         allPrices = transactions.map((transaction, index) => {
@@ -345,6 +277,33 @@ const PortfolioDetails = () => {
     setModalContent(<AddFundsModal onClose={() => setIsModalOpen(false)} />);
   };
 
+  let transactionObj = {};
+  let sharesOwnedArr = [];
+  let tickerCompanyIdObj = {};
+
+  for (let i of transactions) {
+    tickerCompanyIdObj[i.ticker] = i.company_id;
+  }
+
+  for (let i of transactions) {
+    let ticker = i.ticker;
+    if (Object.keys(transactionObj).includes(ticker)) {
+      transactionObj[ticker].push(i.shares_owned);
+    } else {
+      transactionObj[ticker] = [i.shares_owned];
+    }
+  }
+
+  for (let key in transactionObj) {
+    let tickObj = {};
+    let sum = 0;
+    for (let el of transactionObj[key]) {
+      sum += el;
+    }
+    tickObj[key] = sum;
+    sharesOwnedArr.push(tickObj);
+  }
+
   return (
     <div>
       <div className="portfolio-container">
@@ -364,25 +323,27 @@ const PortfolioDetails = () => {
           )}
           <h3>Stocks</h3>
           <ul>
-                {sharesOwnedArr.map((stock) => {
-                  if(Number(Object.values(stock)[0]) > 0) {
-                    return (
-                      <li className='portfolioShares'>
-                        {/* /companies/${transactions[Object.keys(stock)[0]].company_id} */}
-                      <Link to={`/companies/${tickerCompanyIdObj[Object.keys(stock)[0]]}`}>
-                        {Object.keys(stock)[0]}
-                      </Link>
-                      <br />
-                      {Object.values(stock)[0]} shares
-                      <br />
-                    </li>
-                    )
-                  } else {
-                    return null
-                  }
-                }
-
-                )}
+            {sharesOwnedArr.map((stock) => {
+              if (Number(Object.values(stock)[0]) > 0) {
+                return (
+                  <li className="portfolioShares">
+                    {/* /companies/${transactions[Object.keys(stock)[0]].company_id} */}
+                    <Link
+                      to={`/companies/${
+                        tickerCompanyIdObj[Object.keys(stock)[0]]
+                      }`}
+                    >
+                      {Object.keys(stock)[0]}
+                    </Link>
+                    <br />
+                    {Object.values(stock)[0]} shares
+                    <br />
+                  </li>
+                );
+              } else {
+                return null;
+              }
+            })}
           </ul>
         </div>
         <div className="info-container">

@@ -15,7 +15,8 @@
   padding-left: 150px;
 }
 
-.info-container {
+.info-container,
+.stocks-and-funds-container {
   flex: 0.2;
   background-color: #f2f2f2;
   padding: 20px;
@@ -23,6 +24,7 @@
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
 }
 
 h4 {
@@ -30,7 +32,9 @@ h4 {
   margin-bottom: 10px;
 }
 
-.delete-watchlist-btn {
+.delete-watchlist-btn,
+.add-funds-btn,
+.withdraw-funds-btn {
   background-color: rgb(255, 166, 0);
   color: white;
   border: none;

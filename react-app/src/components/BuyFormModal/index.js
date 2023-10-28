@@ -40,6 +40,7 @@ export default function BuyFormModal(props) {
             setErrors(errorsStrings);
         } else {
             closeModal()
+            window.location.reload()
         }
       };
 

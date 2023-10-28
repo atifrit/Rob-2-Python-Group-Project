@@ -15,6 +15,7 @@ import AddFundsModal from "../AddFundsModal";
 import RemoveFundsModal from "../RemoveFundsModal";
 import { useModal } from "../../context/Modal";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 const PortfolioDetails = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,13 @@ const PortfolioDetails = () => {
     useState(true);
   const [chartData, setChartData] = useState(null);
   const [reRendered, setReRendered] = useState(false);
+  const history = useHistory();
+  const fetchData = () => {
+    dispatch(getUserPortfolio());
+    dispatch(getUserWatchlist());
+    dispatch(getAllCompanies());
+    setChartData(null);
+  };
 
   const transactions = currentUserPortfolio
     ? currentUserPortfolio.transactions || []
@@ -119,7 +127,7 @@ const PortfolioDetails = () => {
   ]);
 
   useEffect(() => {
-    if (Object.values(allCompanies).length < 1) {
+    if (Object.values(allCompanies).length <= 1) {
       dispatch(getAllCompanies());
     }
 
@@ -140,7 +148,7 @@ const PortfolioDetails = () => {
         allPrices = transactions.map((transaction, index) => {
           let resindex;
           for (let i = 0; i < Object.values(allCompanies).length; i++) {
-            let company = allCompanies[i][i + 1];
+            let company = allCompanies[i] ? allCompanies[i][i + 1] : null;
             if (company && transaction.ticker === company.ticker) {
               resindex = i;
             }
@@ -221,18 +229,10 @@ const PortfolioDetails = () => {
           },
         ],
       };
-      console.log("Updating chartData to:", newChartData);
-      console.log("Is Chart Data Null?", chartData === null);
-      console.log("Chart Data:", JSON.stringify(chartData));
-      setChartData(newChartData);
 
-      console.log("Updated Chart Data:", JSON.stringify(chartData));
+      setChartData(newChartData);
     }
   }, [chartData, allCompanies, transactions]);
-
-  useEffect(() => {
-    console.log("Updated Chart Data2:", JSON.stringify(chartData));
-  }, [chartData]);
 
   useEffect(() => {
     if (!reRendered) {
@@ -244,6 +244,16 @@ const PortfolioDetails = () => {
       return () => clearTimeout(timer);
     }
   }, [reRendered]);
+
+  useEffect(() => {
+    fetchData();
+  }, [dispatch]);
+
+  useEffect(() => {
+    return history.listen((location) => {
+      fetchData();
+    });
+  }, [history, dispatch]);
 
   if (!currentUserPortfolio || !currentUserWatchlist) {
     return <div>Loading...</div>;
@@ -307,27 +317,13 @@ const PortfolioDetails = () => {
   return (
     <div>
       <div className="portfolio-container">
-        <div className="chart-container">
-          <div className="detailsgraph">
-            {chartData && <Line options={options} data={chartData} />}
-          </div>
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : (
-            <p>
-              Funds: $
-              {portfolioBalance !== null
-                ? portfolioBalance.toFixed(2)
-                : "Loading..."}{" "}
-            </p>
-          )}
+        <div className="stocks-and-funds-container">
           <h3>Stocks</h3>
           <ul>
             {sharesOwnedArr.map((stock) => {
               if (Number(Object.values(stock)[0]) > 0) {
                 return (
                   <li className="portfolioShares">
-                    {/* /companies/${transactions[Object.keys(stock)[0]].company_id} */}
                     <Link
                       to={`/companies/${
                         tickerCompanyIdObj[Object.keys(stock)[0]]
@@ -345,7 +341,31 @@ const PortfolioDetails = () => {
               }
             })}
           </ul>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <p>
+              Funds: $
+              {portfolioBalance !== null
+                ? portfolioBalance.toFixed(2)
+                : "Loading..."}
+            </p>
+          )}
+
+          <button className="add-funds-btn" onClick={handleAddFunds}>
+            Add Funds
+          </button>
+          <button className="withdraw-funds-btn" onClick={handleRemoveFunds}>
+            Withdraw Funds
+          </button>
         </div>
+
+        <div className="chart-container">
+          <div className="detailsgraph">
+            {chartData && <Line options={options} data={chartData} />}
+          </div>
+        </div>
+
         <div className="info-container">
           <h3>Watchlists</h3>
           {currentUserWatchlist.map((watchlist, watchlistIndex) => (
@@ -361,7 +381,7 @@ const PortfolioDetails = () => {
                 {watchlist.watchlist_stocks.map((item, index) => (
                   <li key={index}>
                     <Link to={`/companies/${item.company_id}`}>
-                      Ticker: {item.ticker}
+                      {item.ticker}
                     </Link>
                     <br />
                     Price: ${item.price.toFixed(2)}
@@ -391,12 +411,6 @@ const PortfolioDetails = () => {
             </button>
           </div>
         </div>
-        <button className="add-funds-btn" onClick={handleAddFunds}>
-          Add Funds
-        </button>
-        <button className="withdraw-funds-btn" onClick={handleRemoveFunds}>
-          Withdraw Funds
-        </button>
       </div>
       {isModalOpen && modalContent}
     </div>

@@ -1,9 +1,3 @@
-.profile-dropdown {
-  position: absolute;
-  right: 30px;
-  z-index: 10;
-}
-
 .nav-container{
   display: flex;
   justify-content: space-between;
@@ -115,18 +109,42 @@
 .search-input{
   height: 20px;
   border: solid #e3e9ed 1px;
+  width: 207px;
 }
 
 .search-button{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: solid black 1px;
-  border-radius: 50px;
+  background-color: rgba(255, 165, 0, 1);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-left: 10px;
   cursor: pointer;
-  text-decoration: none;
 }
 
 .search-container{
+  position: absolute;
+  top: 8px;
+  right: 45%;
+  display: flex;
+  margin-top: 13px;
+  margin-left: 20px;
+}
 
+.left-container{
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 800px;
+}
+
+.search-results{
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 8px;
+  margin-top: 35px;
+  z-index: 1000;
 }

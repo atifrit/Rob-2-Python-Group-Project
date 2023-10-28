@@ -31,7 +31,7 @@ function SignupFormPage() {
     <>
       <div className="signup-container">
         <div className="left-signup-container">
-          <div className="header">Placeholder signup title</div>
+          <div className="header">Create your login</div>
           <div className="description">
           We'll need your username, email address, and a unique password. You'll use this login to access Canaryhood next time.
           </div>
@@ -40,7 +40,7 @@ function SignupFormPage() {
           </div>
         </div>
         <div className="right-signup-container">
-          <div className="signup-title">Create your login</div>
+          <div className="signup-title">Canaryhood is a simulation investing app</div>
           <ul className="signup-errors">
             {errors.map((error, idx) => <li key={idx}>{error}</li>)}
           </ul>

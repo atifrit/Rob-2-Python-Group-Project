@@ -1,9 +1,3 @@
-.profile-dropdown {
-  position: absolute;
-  right: 30px;
-  z-index: 10;
-}
-
 .nav-container{
   display: flex;
   justify-content: space-between;
@@ -118,15 +112,27 @@
 }
 
 .search-button{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: solid black 1px;
-  border-radius: 50px;
+  background-color: rgba(255, 165, 0, 1);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-left: 0;
   cursor: pointer;
-  text-decoration: none;
 }
 
 .search-container{
+  position: absolute;
+  top: 8px;
+  right: 45%;
+  display: flex;
+  margin-top: 13px;
+  margin-left: 20px;
+}
 
+.left-container{
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 800px;
 }

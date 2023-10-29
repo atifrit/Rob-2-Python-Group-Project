@@ -6,7 +6,7 @@ import "./BuyForm.css";
 
 export default function BuyFormModal(props) {
     const dispatch = useDispatch();
-    const [buyCount, setBuyCount] = useState("");
+    const [buyCount, setBuyCount] = useState('1');
     const [errors, setErrors] = useState([]);
     const { closeModal } = useModal();
 
@@ -53,6 +53,8 @@ export default function BuyFormModal(props) {
                         <li key={idx}>{error}</li>
                     ))}
                 </ul>
+                <p className="errors">{(props.portfolio.balance>(props.prices[props.prices.length - 1]*buyCount)) ? null : 'Insufficient funds'}</p>
+                <p className="errors">{(Number(buyCount) >= 1) ? null : 'Must purchase at least 1 share'}</p>
                 <p>You have ${props.portfolio.balance} remaining</p>
                 <label>
                     Buy:

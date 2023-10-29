@@ -5,7 +5,7 @@ import "./SellForm.css";
 
 export default function SellFormModal(props) {
     const dispatch = useDispatch();
-    const [sellCount, setSellCount] = useState("");
+    const [sellCount, setSellCount] = useState('1');
     const [errors, setErrors] = useState([]);
     const { closeModal } = useModal();
 
@@ -59,6 +59,7 @@ export default function SellFormModal(props) {
                         <li className="errors" key={idx}>{error}</li>
                     ))}
                 </ul>
+                <p className="errors">{(Number(sellCount) >= 1) ? null : 'Must Sell at least 1 share'}</p>
                 <label>
                     Sell:
                     <input

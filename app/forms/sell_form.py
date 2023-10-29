@@ -15,7 +15,6 @@ def sellable(form, field):
     print('form["negSellCount"]: ', form.data["negSellCount"])
     sellcount=field.data
     transactions = Transaction.query.filter_by(portfolio_id=current_user.portfolios[0].id).all()
-    print('transactions: ', transactions[0].company_id)
 
     transactionObj = {}
     for i in transactions:

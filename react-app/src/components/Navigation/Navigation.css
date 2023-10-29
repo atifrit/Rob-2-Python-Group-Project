@@ -120,6 +120,7 @@
   padding: 5px 10px;
   margin-left: 10px;
   cursor: pointer;
+  display: none;
 }
 
 .search-container{
@@ -147,4 +148,9 @@
   padding: 8px;
   margin-top: 35px;
   z-index: 1000;
+}
+
+.search-results li:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
 }

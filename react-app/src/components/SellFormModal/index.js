@@ -5,7 +5,7 @@ import "./SellForm.css";
 
 export default function SellFormModal(props) {
     const dispatch = useDispatch();
-    const [sellCount, setSellCount] = useState("");
+    const [sellCount, setSellCount] = useState('1');
     const [errors, setErrors] = useState([]);
     const { closeModal } = useModal();
 
@@ -51,17 +51,19 @@ export default function SellFormModal(props) {
       };
 
     return (
-        <>
+        <div className="companyBuyFormModalContainer">
             <h1>How Many Shares Would you Like to Sell?</h1>
-            <form onSubmit={handleSubmit}>
+            <form className="buyFormModalForm" onSubmit={handleSubmit}>
                 <ul>
                     {errors.map((error, idx) => (
                         <li className="errors" key={idx}>{error}</li>
                     ))}
                 </ul>
+                <p className="errors">{(Number(sellCount) >= 1) ? null : 'Must Sell at least 1 share'}</p>
                 <label>
                     Sell:
                     <input
+                        className="buyCountInputField"
                         type="number"
                         value={sellCount}
                         onChange={(e) => {
@@ -70,8 +72,10 @@ export default function SellFormModal(props) {
                         required
                     />
                 </label>
-                <button type="submit" disabled={(Number(sellCount) >= 1) ? false : true}>Sell</button>
+                <div className="buyFormModalSubmitContainer">
+                    <button className="companyBuySubmitButton" type="submit" disabled={(Number(sellCount) >= 1) ? false : true}>Sell</button>
+                </div>
             </form>
-        </>
+        </div>
     )
 }

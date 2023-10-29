@@ -21,7 +21,6 @@ transactions_routes = Blueprint('transactions', __name__)
 def UserTransactions():
     print('made it to get route')
     transactions = Transaction.query.filter_by(portfolio_id=current_user.portfolios[0].id).all()
-    print('transactions: ', transactions[0].company_id)
 
     transactionObj = {}
     for i in transactions:

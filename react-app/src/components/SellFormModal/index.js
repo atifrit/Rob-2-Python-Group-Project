@@ -51,9 +51,9 @@ export default function SellFormModal(props) {
       };
 
     return (
-        <>
+        <div className="companyBuyFormModalContainer">
             <h1>How Many Shares Would you Like to Sell?</h1>
-            <form onSubmit={handleSubmit}>
+            <form className="buyFormModalForm" onSubmit={handleSubmit}>
                 <ul>
                     {errors.map((error, idx) => (
                         <li className="errors" key={idx}>{error}</li>
@@ -63,6 +63,7 @@ export default function SellFormModal(props) {
                 <label>
                     Sell:
                     <input
+                        className="buyCountInputField"
                         type="number"
                         value={sellCount}
                         onChange={(e) => {
@@ -71,8 +72,10 @@ export default function SellFormModal(props) {
                         required
                     />
                 </label>
-                <button type="submit" disabled={(Number(sellCount) >= 1) ? false : true}>Sell</button>
+                <div className="buyFormModalSubmitContainer">
+                    <button className="companyBuySubmitButton" type="submit" disabled={(Number(sellCount) >= 1) ? false : true}>Sell</button>
+                </div>
             </form>
-        </>
+        </div>
     )
 }

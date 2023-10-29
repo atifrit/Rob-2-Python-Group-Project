@@ -33,6 +33,8 @@
 
   .companyBuySubmitButton:disabled {
     color: lightsalmon;
+    background-color: white;
+    border: 1px solid grey;
     cursor: auto;
   }
 

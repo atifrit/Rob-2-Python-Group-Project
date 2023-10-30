@@ -96,7 +96,7 @@ function Navigation({ isLoaded }) {
         <div className='search-container'>
           <input className='search-input'
             type="text"
-            placeholder="Enter Company Name"
+            placeholder="Search for company"
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);

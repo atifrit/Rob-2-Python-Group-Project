@@ -19,7 +19,6 @@ transactions_routes = Blueprint('transactions', __name__)
 @transactions_routes.route('/')
 @login_required
 def UserTransactions():
-    print('made it to get route')
     transactions = Transaction.query.filter_by(portfolio_id=current_user.portfolios[0].id).all()
 
     transactionObj = {}

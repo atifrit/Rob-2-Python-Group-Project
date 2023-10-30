@@ -65,16 +65,16 @@ Canaryhood Website: https://canaryhood.onrender.com/
 
 # Screenshots:
    - Landing Page:
-      <img alt="landing-page" src="./images/landing_page.JPG">
+      <img alt="landing-page" src="https://github.com/atifrit/Rob-2-Python-Group-Project/blob/main/react-app/images/landing_page.JPG">
    - Portfolio:
-      <img alt="Portfolio" src="./images/Portfolio.JPG">
+      <img alt="Portfolio" src="https://github.com/atifrit/Rob-2-Python-Group-Project/blob/main/react-app/images/Portfolio.JPG">
    - Company Details:
-      <img alt="company-details" src="./images/Company_Details.JPG">
+      <img alt="company-details" src="https://github.com/atifrit/Rob-2-Python-Group-Project/blob/main/react-app/images/Company_Details.JPG">
 
 # Technical Implementation:
 
    Canaryhood never deletes past transactions which is an important feature of applications that deal with finances. As a result, displaying information that is determined by transaction history is implemented by querying for the user's transactions once per page and utilizing the data across calculations needed to display useful information to the user while hiding less useful information. The screenshot below shows how the transactions are returned as a dictionary which uses stock tickers as keys and arrays of previous transaction share buy/sell information.
-   <img alt="company-details" src="./images/transaction_image.JPG">
+   <img alt="company-details" src="https://github.com/atifrit/Rob-2-Python-Group-Project/blob/main/react-app/images/transaction_image.JPG">
 
 # Installation Instructions:
 

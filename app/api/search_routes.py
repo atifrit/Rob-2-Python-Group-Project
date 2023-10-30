@@ -7,8 +7,6 @@ search_routes = Blueprint('search', __name__)
 def search_companies():
     search_query = request.args.get('query')
 
-    print("search_query", search_query)
-
     if search_query:
         results = Company.query.filter(Company.name.ilike(f'%{search_query}%')).all()
 
@@ -36,8 +34,7 @@ def search_companies():
                 } for company in results
             ]
 
-            print("company_list:", company_list)
-            
+
             return jsonify(company_list)
         else:
             return jsonify([])

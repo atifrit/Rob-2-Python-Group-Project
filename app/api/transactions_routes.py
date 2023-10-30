@@ -36,7 +36,6 @@ def UserTransactions():
 def Buy():
     # data = request.json
 
-    print('currentuser portfolio: ', current_user.portfolios[0].id)
     form = BuyForm()
     # Get the csrf_token from the request cookie and put it into the
     # form manually to validate_on_submit can be used
@@ -53,8 +52,6 @@ def Buy():
         portfolio.balance = new_balance
         db.session.commit()
         updated = Portfolio.query.filter_by(user_id=current_user.id).first()
-        print('new balance: ', updated.balance)
-        print('made it to validate')
         return jsonify({"message": "transaction successful"}), 201
     return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 
@@ -66,7 +63,6 @@ def Buy():
 def Sell():
     # data = request.json
 
-    print('currentuser portfolio: ', current_user.portfolios[0].id)
     form = SellForm()
     # Get the csrf_token from the request cookie and put it into the
     # form manually to validate_on_submit can be used
@@ -83,7 +79,5 @@ def Sell():
         portfolio.balance = new_balance
         db.session.commit()
         updated = Portfolio.query.filter_by(user_id=current_user.id).first()
-        print('new balance: ', updated.balance)
-        print('made it to validate')
         return jsonify({"message": "transaction successful"}), 201
     return {'errors': validation_errors_to_error_messages(form.errors)}, 401

@@ -30,7 +30,6 @@ const CompanyDetails = () => {
       dispatch(getUserPortfolio());
     }
   }, [dispatch, currentUserPortfolio]);
-  console.log("comapny: ", company);
 
   const [showMenu, setShowMenu] = useState(false);
 

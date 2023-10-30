@@ -10,8 +10,6 @@ export default function SellFormModal(props) {
     const { closeModal } = useModal();
 
 
-    console.log('userbalance: ', props.user)
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -21,10 +19,6 @@ export default function SellFormModal(props) {
         const negSellCount = sellCount*-1
         const balanceDeduct = props.prices[props.prices.length - 1]*negSellCount
         const ticker = props.ticker
-
-        const response = await fetch('/api/transactions/');
-        const transactionsObj = await response.json()
-        console.log('transactionsObj', transactionsObj);
 
         const data = await fetch('/api/transactions/sell', {
             method: "POST",

@@ -34,7 +34,6 @@ export const getUserWatchlist = () => async (dispatch) => {
     const response = await fetch("/api/watchlists/");
     if (!response.ok) throw response;
     const data = await response.json();
-    console.log("Watchlist data:", data);
     dispatch(setUserWatchlist(data));
   } catch (error) {
     console.error("Error fetching user watchlist:", error);

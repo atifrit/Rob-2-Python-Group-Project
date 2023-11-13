@@ -12,7 +12,7 @@ import OpenModalButton from "../../OpenModalButton";
 import BuyFormModal from "../../BuyFormModal";
 import SellFormModal from "../../SellFormModal";
 import { getUserPortfolio } from "../../../store/portfolios";
-import './CompanyDetails.css';
+import "./CompanyDetails.css";
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
@@ -50,8 +50,8 @@ const CompanyDetails = () => {
 
       const isStockInSelectedWatchlist = targetWatchlist
         ? targetWatchlist.watchlist_stocks.some(
-          (stock) => stock.company_id === company.id
-        )
+            (stock) => stock.company_id === company.id
+          )
         : false;
 
       setIsInWatchlist(isStockInSelectedWatchlist);
@@ -118,6 +118,7 @@ const CompanyDetails = () => {
     tooltips: {
       intersect: false,
     },
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -206,12 +207,11 @@ const CompanyDetails = () => {
     return (
       <>
         <div className="company-details">
-
           <div className="company-about">
             <h2>About</h2>
-            <p>{company.name}</p>
-            <p>{company.ticker}</p>
-            <p>{company.ceo}</p>
+            <p>Name: {company.name}</p>
+            <p>Ticker: {company.ticker}</p>
+            <p>CEO: {company.ceo}</p>
             <p>Headquarters: {company.headquarters}</p>
             <p>Founded: {company.founded}</p>
           </div>
@@ -221,7 +221,7 @@ const CompanyDetails = () => {
 
           <div className="company-statistics">
             <h2>Key Statistics</h2>
-            <table className='companyStatsTable'>
+            <table className="companyStatsTable">
               <tbody>
                 <tr>
                   <td>Avg. Volume:</td>
@@ -254,12 +254,11 @@ const CompanyDetails = () => {
               </tbody>
             </table>
           </div>
-
         </div>
         <div className="companyInteractionContainer">
           <div className="add-to-watchlist">
             <select
-              className='companyWatchlistSelect'
+              className="companyWatchlistSelect"
               onFocus={fetchWatchlists}
               value={selectedWatchlist}
               onChange={(e) => setSelectedWatchlist(e.target.value)}
@@ -274,21 +273,33 @@ const CompanyDetails = () => {
             </select>
             {selectedWatchlist ? (
               isInWatchlist ? (
-                <button className='companyAddToWatchlist' onClick={handleRemoveFromWatchlist}>
+                <button
+                  className="companyAddToWatchlist"
+                  onClick={handleRemoveFromWatchlist}
+                >
                   Remove from Watchlist
                 </button>
               ) : (
-                <button className='companyAddToWatchlist' onClick={handleAddToWatchlist}>Add to Watchlist</button>
+                <button
+                  className="companyAddToWatchlist"
+                  onClick={handleAddToWatchlist}
+                >
+                  Add to Watchlist
+                </button>
               )
             ) : (
-              <button className='companyAddToWatchlist' onClick={handleAddToWatchlist} disabled>
+              <button
+                className="companyAddToWatchlist"
+                onClick={handleAddToWatchlist}
+                disabled
+              >
                 Add to Watchlist
               </button>
             )}
           </div>
-          <div className='companyModalButtonContainer'>
+          <div className="companyModalButtonContainer">
             <OpenModalButton
-              className='companyBuySellModal'
+              className="companyBuySellModal"
               buttonText="Buy"
               onItemClick={closeMenu}
               modalComponent={
@@ -301,7 +312,7 @@ const CompanyDetails = () => {
               }
             />
             <OpenModalButton
-              className='companyBuySellModal'
+              className="companyBuySellModal"
               buttonText="Sell"
               onItemClick={closeMenu}
               modalComponent={

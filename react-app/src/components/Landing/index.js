@@ -1,5 +1,6 @@
 import "./Landing.css";
 import Navigation from "../Navigation";
+import { Link } from "react-router-dom";
 
 export default function Landing() {
   return (
@@ -39,6 +40,22 @@ export default function Landing() {
             Introducing canaryhood Retirement– Get a 1% match,<br></br> custom
             recommended portfolios, and no commission fees.
           </div>
+        </div>
+      </div>
+      <div className="signup-container">
+        <img
+          className="signup-image"
+          src={
+            "https://cdn.discordapp.com/attachments/1164946325205422181/1178808104708735026/c9ccdc380bb69cc80a02463288f8776b.png"
+          }
+        />
+        <div className="signup-title-container">
+          <div className="signup-title-text">
+            Join a new generation of investors
+          </div>
+          <Link to="/signup" className="signup-button">
+            <button className="sign-btn">Sign up</button>
+          </Link>
         </div>
       </div>
     </div>

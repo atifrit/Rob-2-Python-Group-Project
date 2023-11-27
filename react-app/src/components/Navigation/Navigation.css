@@ -1,20 +1,20 @@
-.nav-container{
+.nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 60px;
   max-width: 100%;
-  border-bottom: solid black 1px ;
+  border-bottom: solid black 1px;
   padding: 0 24px;
-  font-family: 'Inter';
+  font-family: "Inter";
 }
-.navbar{
+.navbar {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.logo-container{
+.logo-container {
   width: 150px;
   height: 100%;
   display: flex;
@@ -33,12 +33,12 @@
   height: 25px;
 }
 
-#github-logo{
+#github-logo {
   width: 35px;
   height: 35px;
 }
 
-.github{
+.github {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -55,12 +55,12 @@
   text-decoration: none;
   color: black;
 }
-.github-text{
+.github-text {
   text-decoration: none;
   color: black;
 }
 
-.github-links{
+.github-links {
   display: flex;
   flex-grow: 1;
   align-items: center;
@@ -69,7 +69,7 @@
   padding-left: 20px;
 }
 
-.right-nav-container{
+.right-nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,39 +80,51 @@
   font-weight: 700;
 }
 
-.login{
+.login {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 102px;
   height: 44px;
-  border: solid black 1px;
+  border: none;
+  background-color: #6db070;
   border-radius: 50px;
   cursor: pointer;
+  color: white;
   text-decoration: none;
+  transition: background-color 0.3s ease;
 }
 
-.signup{
+.login:hover {
+  background-color: rgb(14, 1, 11);
+}
+
+.signup {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 102px;
   height: 44px;
-  border: solid black 1px;
+  border: none;
   border-radius: 50px;
-  background-color: black;
+  background-color: rgb(255, 166, 0);
   text-decoration: none;
   color: white;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.search-input{
+.signup:hover {
+  background-color: rgb(255, 85, 0);
+}
+
+.search-input {
   height: 30px;
   border: solid #e3e9ed 2px;
   width: 207px;
 }
 
-.search-button{
+.search-button {
   background-color: rgba(255, 165, 0, 1);
   color: white;
   border: none;
@@ -123,7 +135,7 @@
   display: none;
 }
 
-.search-container{
+.search-container {
   position: absolute;
   top: 8px;
   right: 45%;
@@ -132,14 +144,14 @@
   margin-left: 20px;
 }
 
-.left-container{
+.left-container {
   display: flex;
   align-items: center;
   height: 100%;
   width: 800px;
 }
 
-.search-results{
+.search-results {
   position: absolute;
   background-color: white;
   border: 1px solid #ccc;
@@ -153,4 +165,59 @@
 .search-results li:hover {
   background-color: #f0f0f0;
   cursor: pointer;
+}
+
+@media (max-width: 1280px) {
+  .nav-container {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    padding: 10px;
+  }
+
+  .left-container {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .logo-container {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .github-links {
+    display: none;
+  }
+
+  .search-container {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 10px 0;
+  }
+
+  .right-nav-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .login,
+  .signup {
+    margin-right: 10px;
+  }
+
+  .search-button {
+    display: inline-block;
+    margin-left: 0;
+  }
+
+  .search-input {
+    width: 100%;
+    margin-right: 0;
+  }
 }

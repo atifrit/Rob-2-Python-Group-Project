@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
-import './SignupForm.css';
+import "./SignupForm.css";
 
 function SignupFormPage() {
   const dispatch = useDispatch();
@@ -18,81 +18,92 @@ function SignupFormPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
-        const data = await dispatch(signUp(username, email, password));
-        if (data) {
-          setErrors(data)
-        }
+      const data = await dispatch(signUp(username, email, password));
+      if (data) {
+        setErrors(data);
+      }
     } else {
-        setErrors(['Confirm Password field must be the same as the Password field']);
+      setErrors([
+        "Confirm Password field must be the same as the Password field",
+      ]);
     }
   };
 
   return (
     <>
-      <div className="signup-container">
+      <div className="signuppage-container">
         <div className="left-signup-container">
           <div className="header">Create your login</div>
           <div className="description">
-          We'll need your username, email address, and a unique password. You'll use this login to access Canaryhood next time.
+            We'll need your username, email address, and a unique password.
+            You'll use this login to access Canaryhood next time.
           </div>
           <div className="bottom-image">
-            <img src={"https://cdn.robinhood.com/app_assets/odyssey/rockets.png"} />
+            <img
+              src={"https://cdn.robinhood.com/app_assets/odyssey/rockets.png"}
+            />
           </div>
         </div>
         <div className="right-signup-container">
-          <div className="signup-title">Canaryhood is a simulation investing app</div>
+          <div className="signup-title">
+            Canaryhood is a simulation investing app
+          </div>
           <ul className="signup-errors">
-            {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+            {errors.map((error, idx) => (
+              <li key={idx}>{error}</li>
+            ))}
           </ul>
           <div className="signup-form-container">
             <form onSubmit={handleSubmit}>
               <div className="signup-inputs">
                 <div>
-                <input
-                  type="text"
-                  name="signup"
-                  value={email}
-                  placeholder="Email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+                  <input
+                    type="text"
+                    name="signup"
+                    value={email}
+                    placeholder="Email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
                 </div>
               </div>
               <div className="signup-inputs">
                 <div>
-                <input
-                  type="text"
-                  name="signup"
-                  value={username}
-                  placeholder="Username"
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
+                  <input
+                    type="text"
+                    name="signup"
+                    value={username}
+                    placeholder="Username"
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
                 </div>
               </div>
               <div className="signup-inputs">
                 <div>
-                <input
-                  type="password"
-                  name="signup"
-                  value={password}
-                  placeholder="Password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                  <input
+                    type="password"
+                    name="signup"
+                    value={password}
+                    placeholder="Password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
                 </div>
                 <div>
-                <input
-                  type="password"
-                  name="signup"
-                  value={confirmPassword}
-                  placeholder="Confirm Password"
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
+                  <input
+                    type="password"
+                    name="signup"
+                    value={confirmPassword}
+                    placeholder="Confirm Password"
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
                 </div>
               </div>
-              <button id="signup-submit-button" type="submit">Sign Up</button>
+              <button id="signup-submit-button" type="submit">
+                Sign Up
+              </button>
             </form>
           </div>
         </div>

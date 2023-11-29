@@ -12,7 +12,7 @@
   width: 1000px;
   height: 600px;
   position: relative;
-  padding-left: 150px;
+  padding-left: 30px;
 }
 
 .info-container,
@@ -25,6 +25,7 @@
   display: flex;
   flex-direction: column;
   margin-left: 20px;
+  margin-top: 20px;
 }
 
 h4 {
@@ -34,7 +35,8 @@ h4 {
 
 .delete-watchlist-btn,
 .add-funds-btn,
-.withdraw-funds-btn {
+.withdraw-funds-btn,
+.create-watchlist-btn {
   background-color: rgb(255, 166, 0);
   color: white;
   border: none;
@@ -42,6 +44,14 @@ h4 {
   padding: 5px 10px;
   margin-top: 10px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-watchlist-btn:hover,
+.add-funds-btn:hover,
+.withdraw-funds-btn:hover,
+.create-watchlist-btn:hover {
+  background-color: rgb(255, 85, 0);
 }
 
 ul {
@@ -76,4 +86,33 @@ li {
   padding: 5px 10px;
   margin-left: 0;
   cursor: pointer;
+}
+
+@media (max-width: 1280px) {
+  .portfolio-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .chart-container {
+    order: -1;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+
+  .detailsgraph {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .stocks-and-funds-container,
+  .info-container {
+    width: calc(100% - 40px);
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 }

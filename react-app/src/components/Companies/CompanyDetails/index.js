@@ -12,7 +12,7 @@ import OpenModalButton from "../../OpenModalButton";
 import BuyFormModal from "../../BuyFormModal";
 import SellFormModal from "../../SellFormModal";
 import { getUserPortfolio } from "../../../store/portfolios";
-import './CompanyDetails.css';
+import "./CompanyDetails.css";
 
 const CompanyDetails = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,34 @@ const CompanyDetails = () => {
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const user = useSelector((state) => state.session.user);
   const { currentUserPortfolio } = useSelector((state) => state.portfolios);
+  const [yearBool, setYearBool] = useState(false);
+  const [monthBool, setMonthBool] = useState(true);
+  const [weekBool, setWeekBool] = useState(false);
   const [prices, setPrices] = useState([]);
+
+  let labels
+  if (monthBool) {
+    labels = [
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+      21, 22, 23, 24, 25, 26, 27, 28, 29,
+    ].reverse()
+  }
+
+  if (weekBool) {
+    labels = [
+      0, 1, 2, 3, 4, 5, 6
+    ].reverse()
+  }
+
+  if (yearBool) {
+    labels = []
+
+    for (let i = 364; i >= 0; i--) {
+      labels.push(i)
+    }
+  }
+
+
 
   useEffect(() => {
     if (!currentUserPortfolio) {
@@ -63,6 +90,28 @@ const CompanyDetails = () => {
       setPrices(priceGenerator(company.price, 30, Progressions));
     }
   }, [company]);
+
+  const priceUpdate = () => {
+    setMonthBool(true);
+    setYearBool(false);
+    setWeekBool(false);
+    setPrices(priceGenerator(company.price, 30, Progressions))
+  }
+
+  const  priceUpdateWeek = () => {
+    setMonthBool(false);
+    setYearBool(false);
+    setWeekBool(true);
+    setPrices(priceGenerator(company.price, 7, Progressions))
+  }
+  const  priceUpdateYear = () => {
+    setMonthBool(false);
+    setYearBool(true);
+    setWeekBool(false);
+    setPrices(priceGenerator(company.price, 365, Progressions))
+    console.log(prices)
+  }
+
 
   const openMenu = () => {
     if (showMenu) return;
@@ -118,6 +167,7 @@ const CompanyDetails = () => {
     tooltips: {
       intersect: false,
     },
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -158,11 +208,9 @@ const CompanyDetails = () => {
     return prices;
   }
 
+
   let data = {
-    labels: [
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-      21, 22, 23, 24, 25, 26, 27, 28, 29,
-    ].reverse(),
+    labels: labels,
     datasets: [
       {
         label: `${company.name}`,
@@ -206,22 +254,20 @@ const CompanyDetails = () => {
     return (
       <>
         <div className="company-details">
-
           <div className="company-about">
             <h2>About</h2>
-            <p>{company.name}</p>
-            <p>{company.ticker}</p>
-            <p>{company.ceo}</p>
+            <p>Name: {company.name}</p>
+            <p>Ticker: {company.ticker}</p>
+            <p>CEO: {company.ceo}</p>
             <p>Headquarters: {company.headquarters}</p>
             <p>Founded: {company.founded}</p>
           </div>
           <div className="detailsgraph">
             <Line options={options} data={data} />
           </div>
-
           <div className="company-statistics">
             <h2>Key Statistics</h2>
-            <table className='companyStatsTable'>
+            <table className="companyStatsTable">
               <tbody>
                 <tr>
                   <td>Avg. Volume:</td>
@@ -254,12 +300,17 @@ const CompanyDetails = () => {
               </tbody>
             </table>
           </div>
-
         </div>
         <div className="companyInteractionContainer">
+          <div className="h1titletext">Time Scale:</div>
+          <div className='timeoptions'>
+            <button className='companyBuySellModal' onClick={priceUpdateWeek}>1 Week</button>
+            <button className='companyBuySellModal' onClick={priceUpdate}>1 Month</button>
+            <button className='companyBuySellModal' onClick={priceUpdateYear}>1 Year</button>
+          </div>
           <div className="add-to-watchlist">
             <select
-              className='companyWatchlistSelect'
+              className="companyWatchlistSelect"
               onFocus={fetchWatchlists}
               value={selectedWatchlist}
               onChange={(e) => setSelectedWatchlist(e.target.value)}
@@ -274,21 +325,33 @@ const CompanyDetails = () => {
             </select>
             {selectedWatchlist ? (
               isInWatchlist ? (
-                <button className='companyAddToWatchlist' onClick={handleRemoveFromWatchlist}>
+                <button
+                  className="companyAddToWatchlist"
+                  onClick={handleRemoveFromWatchlist}
+                >
                   Remove from Watchlist
                 </button>
               ) : (
-                <button className='companyAddToWatchlist' onClick={handleAddToWatchlist}>Add to Watchlist</button>
+                <button
+                  className="companyAddToWatchlist"
+                  onClick={handleAddToWatchlist}
+                >
+                  Add to Watchlist
+                </button>
               )
             ) : (
-              <button className='companyAddToWatchlist' onClick={handleAddToWatchlist} disabled>
+              <button
+                className="companyAddToWatchlist"
+                onClick={handleAddToWatchlist}
+                disabled
+              >
                 Add to Watchlist
               </button>
             )}
           </div>
-          <div className='companyModalButtonContainer'>
+          <div className="companyModalButtonContainer">
             <OpenModalButton
-              className='companyBuySellModal'
+              className="companyBuySellModal"
               buttonText="Buy"
               onItemClick={closeMenu}
               modalComponent={
@@ -301,7 +364,7 @@ const CompanyDetails = () => {
               }
             />
             <OpenModalButton
-              className='companyBuySellModal'
+              className="companyBuySellModal"
               buttonText="Sell"
               onItemClick={closeMenu}
               modalComponent={

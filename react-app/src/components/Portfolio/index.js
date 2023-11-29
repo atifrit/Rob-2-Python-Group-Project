@@ -95,6 +95,7 @@ const PortfolioDetails = () => {
       },
     },
     responsive: true,
+    maintainAspectRatio: false,
   };
 
   useEffect(() => {

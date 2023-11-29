@@ -127,4 +127,12 @@
     margin-left: 20px;
     margin-right: 20px;
   }
+
+}
+
+
+.timeoptions {
+  display: flex;
+  width: calc(25%);
+  justify-content: space-around;
 }

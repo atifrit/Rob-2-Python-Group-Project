@@ -109,7 +109,6 @@ const CompanyDetails = () => {
     setYearBool(true);
     setWeekBool(false);
     setPrices(priceGenerator(company.price, 365, Progressions))
-    console.log(prices)
   }
 
 

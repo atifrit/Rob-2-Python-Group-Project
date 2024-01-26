@@ -7,7 +7,7 @@ import { addBalanceToPortfolio } from "../../store/portfolios";
 const AddFundsModal = () => {
   const dispatch = useDispatch();
   const { setModalContent } = useModal();
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [error, setError] = useState(null);
 
   const handleAddFunds = async () => {

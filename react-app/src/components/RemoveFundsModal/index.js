@@ -6,7 +6,7 @@ import { removeBalanceFromPortfolio } from "../../store/portfolios";
 const RemoveFundsModal = () => {
   const dispatch = useDispatch();
   const { setModalContent } = useModal();
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [error, setError] = useState(null);
 
   const handleRemoveFunds = async () => {

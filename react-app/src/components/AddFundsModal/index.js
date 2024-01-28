@@ -38,7 +38,8 @@ const AddFundsModal = () => {
           placeholder="Enter amount"
           value={amount}
           onChange={(e) => {
-            setAmount(parseFloat(e.target.value) || 0);
+            const inputValue = e.target.value;
+            setAmount(inputValue);
             setError(null);
           }}
         />
